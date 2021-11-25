@@ -6,41 +6,119 @@ from django.contrib.auth.models import (
 )
 
 
-class User(AbstractBaseUser):
+class CustomUserManager(BaseUserManager):
+    def create_user(self, first_name, last_name, email, password=None):
+        """
+        Creates and saves a User with the given email , first_name,
+        last_name and password.
+        """
+        if not email:
+            raise ValueError("User must have an email")
+        if not password:
+            raise ValueError("User must have a password")
+        if not first_name:
+            raise ValueError("User must have a first name")
+        if not last_name:
+            raise ValueError("User must have a last name")
+
+        user = self.model(
+            email=self.normalize_email(email)
+        )
+        user.first_name = first_name
+        user.last_name = last_name
+        user.set_password(password)  # change password to hash
+        user.is_admin = False
+        user.is_staff = False
+        user.save(using=self._db)
+        return user
+
+    def create_staffuser(self, first_name, last_name, email, password):
+        """
+        Creates and saves a staff user with the given email , first_name,
+        last_name and password.
+        """
+        if not email:
+            raise ValueError("User must have an email")
+        if not password:
+            raise ValueError("User must have a password")
+        if not first_name:
+            raise ValueError("User must have a first name")
+        if not last_name:
+            raise ValueError("User must have a last name")
+
+        user = self.model(
+            email=self.normalize_email(email)
+        )
+        user.first_name = first_name
+        user.last_name = last_name
+        user.set_password(password)  # change password to hash
+        user.is_admin = False
+        user.is_staff = True
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, first_name, last_name, email, password):
+        """
+        Creates and saves a superuser with the given email , first_name,
+        last_name and password.
+        """
+        if not email:
+            raise ValueError("User must have an email")
+        if not password:
+            raise ValueError("User must have a password")
+        if not first_name:
+            raise ValueError("User must have a first name")
+        if not last_name:
+            raise ValueError("User must have a last name")
+
+        user = self.model(
+            email=self.normalize_email(email)
+        )
+        user.first_name = first_name
+        user.last_name = last_name
+        user.set_password(password)  # change password to hash
+        user.is_admin = True
+        user.is_staff = True
+        user.save(using=self._db)
+        return user
+
+
+class CustomUser(AbstractBaseUser):
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
         unique=True,
     )
+    first_name = models.CharField(
+        verbose_name='first name',
+        max_length=255)
+    last_name = models.CharField(
+        verbose_name='last name',
+        max_length=255)
     is_active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False) # a admin user; non super-user
     admin = models.BooleanField(default=False) # a superuser
 
-    # notice the absence of a "Password field", that is built in.
-
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = [] # Email & Password are required by default.
+    REQUIRED_FIELDS = ['first_name', 'last_name'] # Email & Password are required by default.
 
-    def get_full_name(self):
-        # The user is identified by their email address
-        return self.email
+    
+    objects = CustomUserManager()
 
-    def get_short_name(self):
-        # The user is identified by their email address
-        return self.email
+    @staticmethod
+    def has_perm(perm, obj=None):
+        # "Does the user have a specific permission?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    @staticmethod
+    def has_module_perms(app_label):
+        # "Does the user have permissions to view the app `app_label`?"
+        # Simplest possible answer: Yes, always
+        return True
 
     def __str__(self):
-        return self.email
-
-    def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
-        # Simplest possible answer: Yes, always
-        return True
-
-    def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
-        # Simplest possible answer: Yes, always
-        return True
+        return f"{self.email}"
 
     @property
     def is_staff(self):
@@ -51,50 +129,3 @@ class User(AbstractBaseUser):
     def is_admin(self):
         "Is the user a admin member?"
         return self.admin
-
-
-class UserManager(BaseUserManager):
-    def create_user(self, email, password=None):
-        """
-        Creates and saves a User with the given email and password.
-        """
-        if not email:
-            raise ValueError('Users must have an email address')
-
-        user = self.model(
-            email=self.normalize_email(email),
-        )
-
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_staffuser(self, email, password):
-        """
-        Creates and saves a staff user with the given email and password.
-        """
-        user = self.create_user(
-            email,
-            password=password,
-        )
-        user.staff = True
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, email, password):
-        """
-        Creates and saves a superuser with the given email and password.
-        """
-        user = self.create_user(
-            email,
-            password=password,
-        )
-        user.staff = True
-        user.admin = True
-        user.save(using=self._db)
-        return user
-
-# hook in the New Manager to our Model
-class User(AbstractBaseUser): # from step 2
-    ...
-    objects = UserManager()

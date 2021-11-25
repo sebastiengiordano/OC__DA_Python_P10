@@ -1,3 +1,9 @@
 from django.shortcuts import render
+from rest_framework.viewsets import ModelViewSet
 
-# Create your views here.
+from issue_tracking_system.serializers import ProjectsSerializer
+
+class ProjectView(ModelViewSet):
+    '''View used to manage Project.'''
+    
+    serializer_class = ProjectsSerializer
