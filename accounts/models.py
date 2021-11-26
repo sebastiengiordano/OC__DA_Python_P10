@@ -1,12 +1,12 @@
 from django.db import models
 
-from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 
 
 class CustomUserManager(BaseUserManager):
+    '''This class aims to managed our CustomUser.'''
     def create_user(self, first_name, last_name, email, password=None):
         """
         Creates and saves a User with the given email , first_name,
@@ -77,13 +77,14 @@ class CustomUserManager(BaseUserManager):
         user.first_name = first_name
         user.last_name = last_name
         user.set_password(password)  # change password to hash
-        user.is_admin = True
-        user.is_staff = True
+        user.admin = True
+        user.staff = True
         user.save(using=self._db)
         return user
 
 
 class CustomUser(AbstractBaseUser):
+    '''This class aims to created our own customized user.'''
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -96,13 +97,14 @@ class CustomUser(AbstractBaseUser):
         verbose_name='last name',
         max_length=255)
     is_active = models.BooleanField(default=True)
-    staff = models.BooleanField(default=False) # a admin user; non super-user
-    admin = models.BooleanField(default=False) # a superuser
+    staff = models.BooleanField(default=False)  # a admin user; non super-user
+    admin = models.BooleanField(default=False)  # a superuser
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name'] # Email & Password are required by default.
+    # Since Email & Password are required by default,
+    # there's no need to add in REQUIRED_FIELDS.
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
-    
     objects = CustomUserManager()
 
     @staticmethod

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from rest_framework import generics
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import AllowAny
 
 from accounts.models import CustomUser
 from accounts.serializers import RegistrationSerializer
@@ -25,14 +25,5 @@ from accounts.serializers import RegistrationSerializer
 
 class RegisterView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
-    # permission_classes = (AllowAny,)
+    permission_classes = (AllowAny,)
     serializer_class = RegistrationSerializer
-
-
-# def signup(request):
-#     '''View used to manage user's registration.'''
-#     email = request.POST['email']
-#     first_name = request.POST['first_name']
-#     last_name = request.POST['last_name']
-#     password = request.POST['password']
-#     password_check = request.POST['password_check']
