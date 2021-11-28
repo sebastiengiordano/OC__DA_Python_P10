@@ -30,10 +30,17 @@ class IsStaffAuthenticated(BasePermission):
 class IsProjectAuthor(BasePermission):
 
     def has_permission(self, request, view):
+        # This permissions only allow the project's author
         project = view.get_object()
         return bool(request.user
                     and request.user.is_authenticated
                     and project.author_user_id == request.user.id)
+
+    def has_object_permission(self, request, view, obj):
+        # As this permissions is checked after the has_permission method,
+        # since the project's author is already identified,
+        # this method could allow action on this object.
+        return True
 
 
 class IsProjectContributor(BasePermission):
@@ -45,9 +52,9 @@ class IsProjectContributor(BasePermission):
                     and request.user.is_authenticated)
 
     def has_object_permission(self, request, view, obj):
-        # Deny actions on objects if the user is not authenticated
-        if not request.user.is_authenticated():
-            return False
+        # Deny actions on objects since this user is a contributor
+        # not the author.
+        return False
 
-        if view.action == 'retrieve':
-            return True
+        # if view.action == 'retrieve':
+        #     return True
