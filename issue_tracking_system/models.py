@@ -1,7 +1,17 @@
-import requests
 from django.db import models
 
-from accounts.models import CustomUser
+
+PROJECT_TYPE = (
+    ('Back-end', 'Back-end'),
+    ('Front-end', 'Front-end'),
+    ('iOS', 'iOS',),
+    ('Android', 'Android')
+    )
+
+CONTRIBUTORS_PERMISSIONS = [
+    ('All', 'All'),
+    ('Read_Only', 'Read_Only')
+]
 
 
 class Projects(models.Model):
@@ -9,9 +19,13 @@ class Projects(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 
-    title = models.CharField(max_length=255)
-    description = models.CharField(max_length=2048)
-    type = models.CharField(max_length=2048)
+    title = models.CharField(
+        related_name='title',
+        max_length=255)
+    description = models.TextField(blank=False)
+    type = models.CharField(
+        max_length=10,
+        choices=PROJECT_TYPE)
     author_user_id = models.ForeignKey(
         'accounts.CustomUser',
         on_delete=models.CASCADE,
@@ -19,3 +33,28 @@ class Projects(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Contributors(models.Model):
+
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+
+    user_id = models.IntegerField(
+        related_name='user_id',
+        default=0)
+    project_id = models.IntegerField(
+        related_name='project_id',
+        default=0)
+    permission = models.CharField(
+        max_length=10,
+        choices=CONTRIBUTORS_PERMISSIONS)
+    role = models.CharField(
+        related_name='role',
+        max_length=255)
+
+    def __str__(self):
+        return (
+            "Contributors"
+            "\n\tid: {self.user_id}"
+            "\n\tproject id: {self.project_id}")

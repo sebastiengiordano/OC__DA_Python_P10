@@ -7,6 +7,7 @@ from django.contrib.auth.models import (
 
 class CustomUserManager(BaseUserManager):
     '''This class aims to managed our CustomUser.'''
+
     def create_user(self, first_name, last_name, email, password=None):
         """
         Creates and saves a User with the given email , first_name,
