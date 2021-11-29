@@ -20,7 +20,7 @@ class Projects(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
 
     title = models.CharField(
-        related_name='title',
+        verbose_name='title',
         max_length=255)
     description = models.TextField(blank=False)
     type = models.CharField(
@@ -41,16 +41,16 @@ class Contributors(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
 
     user_id = models.IntegerField(
-        related_name='user_id',
+        verbose_name='user_id',
         default=0)
     project_id = models.IntegerField(
-        related_name='project_id',
+        verbose_name='project_id',
         default=0)
     permission = models.CharField(
         max_length=10,
         choices=CONTRIBUTORS_PERMISSIONS)
     role = models.CharField(
-        related_name='role',
+        verbose_name='role',
         max_length=255)
 
     def __str__(self):
