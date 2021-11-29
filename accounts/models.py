@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+from django.contrib.auth.hashers import make_password
 
 
 class CustomUserManager(BaseUserManager):
@@ -27,9 +28,9 @@ class CustomUserManager(BaseUserManager):
         )
         user.first_name = first_name
         user.last_name = last_name
-        user.set_password(password)  # change password to hash
-        user.is_admin = False
-        user.is_staff = False
+        user.set_password(make_password(password))  # change password to hash
+        user.admin = False
+        user.staff = False
         user.save(using=self._db)
         return user
 
@@ -52,9 +53,9 @@ class CustomUserManager(BaseUserManager):
         )
         user.first_name = first_name
         user.last_name = last_name
-        user.set_password(password)  # change password to hash
-        user.is_admin = False
-        user.is_staff = True
+        user.set_password(make_password(password))  # change password to hash
+        user.admin = False
+        user.staff = True
         user.save(using=self._db)
         return user
 
@@ -77,7 +78,7 @@ class CustomUserManager(BaseUserManager):
         )
         user.first_name = first_name
         user.last_name = last_name
-        user.set_password(password)  # change password to hash
+        user.set_password(make_password(password))  # change password to hash
         user.admin = True
         user.staff = True
         user.save(using=self._db)
@@ -86,6 +87,7 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractBaseUser):
     '''This class aims to created our own customized user.'''
+
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -107,18 +109,6 @@ class CustomUser(AbstractBaseUser):
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
     objects = CustomUserManager()
-
-    @staticmethod
-    def has_perm(perm, obj=None):
-        # "Does the user have a specific permission?"
-        # Simplest possible answer: Yes, always
-        return True
-
-    @staticmethod
-    def has_module_perms(app_label):
-        # "Does the user have permissions to view the app `app_label`?"
-        # Simplest possible answer: Yes, always
-        return True
 
     def __str__(self):
         return f"{self.email}"

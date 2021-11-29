@@ -5,8 +5,9 @@ from django.contrib.auth.password_validation import validate_password
 from accounts.models import CustomUser
 
 
-class RegistrationSerializer(serializers.ModelSerializer):
+class CustomUserSerializer(serializers.ModelSerializer):
 
+    id = serializers.ReadOnlyField()
     email = serializers.EmailField(
             required=True,
             validators=[UniqueValidator(queryset=CustomUser.objects.all())]
@@ -21,6 +22,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = [
+            "id",
             "first_name",
             "last_name",
             "email",
@@ -49,7 +51,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
             password=validated_data['password'],
         )
 
-        user.set_password(validated_data['password'])
-        user.save()
+        # user.set_password(validated_data['password'])
+        # user.save()
 
         return user

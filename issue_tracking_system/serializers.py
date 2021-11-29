@@ -7,9 +7,12 @@ from issue_tracking_system.models import Projects, Contributors
 
 class ProjectsSerializer(serializers.ModelSerializer):
 
+    id = serializers.ReadOnlyField()
+
     class Meta:
         model = Projects
         fields = [
+            'id',
             'title',
             'description',
             'type',
