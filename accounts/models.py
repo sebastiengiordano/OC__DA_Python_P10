@@ -28,7 +28,7 @@ class CustomUserManager(BaseUserManager):
         )
         user.first_name = first_name
         user.last_name = last_name
-        user.set_password(make_password(password))  # change password to hash
+        user.set_password(password)  # change password to hash
         user.admin = False
         user.staff = False
         user.save(using=self._db)
@@ -53,7 +53,7 @@ class CustomUserManager(BaseUserManager):
         )
         user.first_name = first_name
         user.last_name = last_name
-        user.set_password(make_password(password))  # change password to hash
+        user.set_password(password)  # change password to hash
         user.admin = False
         user.staff = True
         user.save(using=self._db)
@@ -78,7 +78,7 @@ class CustomUserManager(BaseUserManager):
         )
         user.first_name = first_name
         user.last_name = last_name
-        user.set_password(make_password(password))  # change password to hash
+        user.set_password(password)  # change password to hash
         user.admin = True
         user.staff = True
         user.save(using=self._db)
@@ -112,6 +112,18 @@ class CustomUser(AbstractBaseUser):
 
     def __str__(self):
         return f"{self.email}"
+
+    @staticmethod
+    def has_perm(perm, obj=None):
+        # "Does the user have a specific permission?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    @staticmethod
+    def has_module_perms(app_label):
+        # "Does the user have permissions to view the app `app_label`?"
+        # Simplest possible answer: Yes, always
+        return True
 
     @property
     def is_staff(self):
