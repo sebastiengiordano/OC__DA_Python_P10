@@ -3,30 +3,6 @@ from rest_framework.permissions import BasePermission
 from issue_tracking_system.serializers import ProjectsSerializer, ContributorsSerializer
 
 
-class TestPermission(BasePermission):
-    def has_permission(self, request, view):
-        return request.user.is_authenticated
-
-    def has_object_permission(self, request, view, obj):
-        return obj.author_user_id == request.user
-
-
-class IsAdminAuthenticated(BasePermission):
-
-    def has_permission(self, request, view):
-        return bool(request.user
-                    and request.user.is_authenticated
-                    and request.user.is_admin)
-
-
-class IsStaffAuthenticated(BasePermission):
-
-    def has_permission(self, request, view):
-        return bool(request.user
-                    and request.user.is_authenticated
-                    and request.user.is_staff)
-
-
 class IsProjectAuthor(BasePermission):
 
     def has_permission(self, request, view):
@@ -41,6 +17,7 @@ class IsProjectAuthor(BasePermission):
         # since the project's author is already identified,
         # this method could allow action on this object.
         return True
+        # return obj.author_user_id == request.user.id
 
 
 class IsProjectContributor(BasePermission):
@@ -48,13 +25,13 @@ class IsProjectContributor(BasePermission):
     contributors_serializers = ContributorsSerializer
 
     def has_permission(self, request, view):
-        return bool(request.user
-                    and request.user.is_authenticated)
+        if view.action == 'list' or view.action == 'retrieve':
+            return bool(request.user
+                        and request.user.is_authenticated)
+        else:
+            return False
 
     def has_object_permission(self, request, view, obj):
         # Deny actions on objects since this user is a contributor
         # not the author.
         return False
-
-        # if view.action == 'retrieve':
-        #     return True
