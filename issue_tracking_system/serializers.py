@@ -7,6 +7,8 @@ from issue_tracking_system.models import Projects, Contributors,\
 
 
 class ProjectsSerializer(serializers.ModelSerializer):
+    '''Serializer of project.'''
+
     project_id = serializers.ReadOnlyField()
     # title = serializers.CharField(
     #     required=True,
@@ -32,12 +34,14 @@ class ProjectsSerializer(serializers.ModelSerializer):
         Creates and saves a Projects and a Contributors with all permissions,
         since its the project's author.
         """
+        user =  self.context['request'].user
         project = Projects.objects.create(
             title=validated_data['title'],
             description=validated_data['description'],
             type=validated_data['type'],
-            author=self.request.user
+            author=user
             )
+        project.save()
         # contributors = Contributors.objects.create(
         #     user_id=self.user.id,
         #     project_id=project.id,
@@ -45,19 +49,20 @@ class ProjectsSerializer(serializers.ModelSerializer):
         #     role='author'
         #     )
         # contributors.save()
-        self.project_contributor.create(
-            user=self.request.user,
+        project_contributor = Contributors.objects.create(
+            user=user,
             project=project,
             permission=CONTRIBUTORS_PERMISSIONS['All'],
             role='author'
             )
+        project_contributor.save()
         return project
 
     def update(self, instance, validated_data):
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
         instance.type = validated_data.get('type', instance.type)
-        # instance.save()
+        instance.save()
         return instance
 
     def get_project_id(self, obj):
@@ -68,6 +73,8 @@ class ProjectsSerializer(serializers.ModelSerializer):
 
 
 class ContributorsSerializer(serializers.ModelSerializer):
+    '''Serializer of contributor.'''
+
     user_id = serializers.SerializerMethodField(read_only=True)
     project_id = serializers.SerializerMethodField(ReadOnlyField)
 

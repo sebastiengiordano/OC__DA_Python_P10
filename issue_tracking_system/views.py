@@ -4,46 +4,29 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from issue_tracking_system.serializers import ProjectsSerializer
-from issue_tracking_system.permissions import IsAdminAuthenticated, \
-    IsStaffAuthenticated, IsProjectAuthor, IsProjectContributor
+from accounts.permissions import IsAdminAuthenticated
+from issue_tracking_system.permissions import \
+    IsProjectAuthor, IsProjectContributor
 
 
-class GetProjectView(viewsets.GenericViewSet,
-                     mixins.ListModelMixin,
-                     mixins.RetrieveModelMixin):
-    '''View used to display all projects or to see project detail.'''
-
-    serializer_class = ProjectsSerializer
-    permission_classes = [
-        IsAdminAuthenticated,
-        IsStaffAuthenticated,
-        IsProjectAuthor,
-        IsProjectContributor]
-
-
-class SetProjectView(viewsets.GenericViewSet,
-                     mixins.UpdateModelMixin,
-                     mixins.DestroyModelMixin):
-    '''View used to update or delete Project.'''
+class ProjectView(viewsets.ModelViewSet):
+    '''Class which manage all project's actions.
+    '''
 
     serializer_class = ProjectsSerializer
-    permission_classes = [
-        IsAdminAuthenticated,
-        IsStaffAuthenticated,
-        IsProjectAuthor]
 
-
-class CreateProjectView(viewsets.GenericViewSet,
-                     mixins.CreateModelMixin):
-    '''View for creating a new project.'''
-
-    serializer_class = ProjectsSerializer
-    permission_classes = [
-        IsAuthenticated]
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        
+        All authentified persons can create a project.
+        Project's author can used all others actions.
+        Project's contributor have only read permissions.
+        """
+        if self.action == 'create':
+            permission_classes = [IsAuthenticated]
+        elif self.action == 'list' or self.action == 'retrieve':
+            permission_classes = [IsProjectAuthor, IsProjectContributor, IsAdminAuthenticated]
+        else:
+            permission_classes = [IsProjectAuthor, IsAdminAuthenticated]
+        return [permission() for permission in permission_classes]

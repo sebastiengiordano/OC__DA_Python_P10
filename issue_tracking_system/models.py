@@ -16,6 +16,7 @@ CONTRIBUTORS_PERMISSIONS = [
 
 
 class Projects(models.Model):
+    '''This class aims to defined projects.'''
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -39,6 +40,7 @@ class Projects(models.Model):
 
 
 class Contributors(models.Model):
+    '''This class aims to defined contributors.'''
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
