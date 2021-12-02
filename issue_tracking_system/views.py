@@ -1,10 +1,10 @@
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
-from rest_framework.response import Response
 
-from issue_tracking_system.serializers import ProjectsSerializer
 from accounts.permissions import IsAdminAuthenticated
+
+from issue_tracking_system.models import Projects
+from issue_tracking_system.serializers import ProjectsSerializer
 from issue_tracking_system.permissions import \
     IsProjectAuthor, IsProjectContributor
 
@@ -13,6 +13,7 @@ class ProjectView(viewsets.ModelViewSet):
     '''Class which manage all project's actions.
     '''
 
+    queryset = Projects.objects.all()
     serializer_class = ProjectsSerializer
 
     def get_permissions(self):
