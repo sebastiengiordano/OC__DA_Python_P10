@@ -7,17 +7,8 @@ from accounts.models import CustomUser
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    '''Serialiser of custom user.'''
 
-    id = serializers.ReadOnlyField()
-    email = serializers.EmailField(
-            required=True,
-            validators=[UniqueValidator(queryset=CustomUser.objects.all())]
-            )
-    first_name = serializers.CharField(required=True)
-    last_name = serializers.CharField(required=True)
-    password = serializers.CharField(
-        write_only=True,
-        validators=[validate_password])
     password_check = serializers.CharField(write_only=True)
 
     class Meta:
@@ -30,12 +21,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
             "password",
             "password_check",
         ]
-        extra_kwargs = {
-            'first_name': {'required': True},
-            'last_name': {'required': True},
-            'password': {'required': True},
-            'password_check': {'required': True}
-        }
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password_check']:
