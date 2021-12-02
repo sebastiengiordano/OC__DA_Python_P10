@@ -64,15 +64,13 @@ class CustomUser(AbstractBaseUser):
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
-        unique=True,
-    )
+        unique=True)
     first_name = models.CharField(
         verbose_name='first name',
         max_length=255)
     last_name = models.CharField(
         verbose_name='last name',
         max_length=255)
-    is_active = models.BooleanField(default=True)
     admin = models.BooleanField(default=False)  # a superuser
 
     USERNAME_FIELD = 'email'

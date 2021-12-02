@@ -9,12 +9,42 @@ from accounts.models import CustomUser
 class CustomUserSerializer(serializers.ModelSerializer):
     '''Serialiser of custom user.'''
 
+    class Meta:
+        model = CustomUser
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "email"
+        ]
+
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+
+        instance.save()
+
+        password = validated_data.get('password', None)
+        password_check = validated_data.get('password_check', None)
+
+        if password and password_check and password == password_check:
+            instance.set_password(password)
+            instance.save()
+
+        update_session_auth_hash(self.context.get('request'), instance)
+
+        return instance
+
+
+class CreateCustomUserSerializer(serializers.ModelSerializer):
+    '''Serialiser for create custom user.'''
+
     password_check = serializers.CharField(write_only=True)
 
     class Meta:
         model = CustomUser
         fields = [
-            "id",
             "first_name",
             "last_name",
             "email",
@@ -36,21 +66,3 @@ class CustomUserSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             password=validated_data['password'],
         )
-
-    def update(self, instance, validated_data):
-        instance.email = validated_data.get('email', instance.email)
-        instance.first_name = validated_data.get('first_name', instance.first_name)
-        instance.last_name = validated_data.get('last_name', instance.last_name)
-
-        instance.save()
-
-        password = validated_data.get('password', None)
-        password_check = validated_data.get('password_check', None)
-
-        if password and password_check and password == password_check:
-            instance.set_password(password)
-            instance.save()
-
-        update_session_auth_hash(self.context.get('request'), instance)
-
-        return instance
