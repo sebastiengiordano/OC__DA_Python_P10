@@ -23,7 +23,8 @@ class Projects(models.Model):
 
     title = models.CharField(
                             verbose_name='title',
-                            max_length=255)
+                            max_length=255,
+                            unique=True)
     description = models.TextField(blank=False)
     type = models.CharField(
                             max_length=10,

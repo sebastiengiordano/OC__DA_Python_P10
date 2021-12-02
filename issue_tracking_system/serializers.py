@@ -17,6 +17,8 @@ class ProjectsSerializer(serializers.ModelSerializer):
     # type = serializers.CharField(required=True)
     author_user_id = serializers.ReadOnlyField()
 
+    contributors = serializers.SerializerMethodField()
+
     class Meta:
         model = Projects
         fields = [
@@ -25,16 +27,19 @@ class ProjectsSerializer(serializers.ModelSerializer):
             'description',
             'type',
             'author_user_id',
+            'contributors',
             'date_created',
             'date_updated'
             ]
 
     def create(self, validated_data):
+        """Creates and saves a Projects and
+        a Contributors with all permissions (since its the project's author).
         """
-        Creates and saves a Projects and a Contributors with all permissions,
-        since its the project's author.
-        """
+
+        # Get the current user
         user =  self.context['request'].user
+        # Create the project
         project = Projects.objects.create(
             title=validated_data['title'],
             description=validated_data['description'],
@@ -42,13 +47,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
             author=user
             )
         project.save()
-        # contributors = Contributors.objects.create(
-        #     user_id=self.user.id,
-        #     project_id=project.id,
-        #     permission=CONTRIBUTORS_PERMISSIONS['All'],
-        #     role='author'
-        #     )
-        # contributors.save()
+        # Add the author as contributor
         project_contributor = Contributors.objects.create(
             user=user,
             project=project,
@@ -65,18 +64,23 @@ class ProjectsSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    def get_project_id(self, obj):
-        return obj.project.id
+    def get_project_id(self, instance):
+        return instance.id
 
-    def get_author_user_id(self, obj):
-        return obj.project.author.id
+    def get_author_user_id(self, instance):
+        return instance.project.author.id
+
+    def get_contributors(self, instance):
+        queryset = instance.project_contributor.all()
+        serializer = ContributorsSerializer(queryset, many=True)
+        return serializer.data
 
 
 class ContributorsSerializer(serializers.ModelSerializer):
     '''Serializer of contributor.'''
 
     user_id = serializers.SerializerMethodField(read_only=True)
-    project_id = serializers.SerializerMethodField(ReadOnlyField)
+    project_id = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Contributors
@@ -89,8 +93,8 @@ class ContributorsSerializer(serializers.ModelSerializer):
             'date_updated'
             ]
 
-    def get_user_id(self, obj):
-        return obj.user.id
+    def get_user_id(self, instance):
+        return instance.user.id
 
-    def get_project_id(self, obj):
-        return obj.project.id
+    def get_project_id(self, instance):
+        return instance.project.id
