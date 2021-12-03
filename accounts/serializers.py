@@ -9,14 +9,34 @@ from accounts.models import CustomUser
 class CustomUserSerializer(serializers.ModelSerializer):
     '''Serialiser of custom user.'''
 
+    password = serializers.CharField(write_only=True)
+    password_check = serializers.CharField(write_only=True)
+
     class Meta:
         model = CustomUser
         fields = [
             "id",
             "first_name",
             "last_name",
-            "email"
+            "email",
+            "password",
+            "password_check"
         ]
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password_check']:
+            raise serializers.ValidationError(
+                {"password": "Password fields didn't match."})
+
+        return attrs
+
+    def create(self, validated_data):
+        return CustomUser.objects.create_user(
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            email=validated_data['email'],
+            password=validated_data['password'],
+        )
 
     def update(self, instance, validated_data):
         instance.email = validated_data.get('email', instance.email)
@@ -35,34 +55,3 @@ class CustomUserSerializer(serializers.ModelSerializer):
         update_session_auth_hash(self.context.get('request'), instance)
 
         return instance
-
-
-class CreateCustomUserSerializer(serializers.ModelSerializer):
-    '''Serialiser for create custom user.'''
-
-    password_check = serializers.CharField(write_only=True)
-
-    class Meta:
-        model = CustomUser
-        fields = [
-            "first_name",
-            "last_name",
-            "email",
-            "password",
-            "password_check",
-        ]
-
-    def validate(self, attrs):
-        if attrs['password'] != attrs['password_check']:
-            raise serializers.ValidationError(
-                {"password": "Password fields didn't match."})
-
-        return attrs
-
-    def create(self, validated_data):
-        return CustomUser.objects.create_user(
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            email=validated_data['email'],
-            password=validated_data['password'],
-        )

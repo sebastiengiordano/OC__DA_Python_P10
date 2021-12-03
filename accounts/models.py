@@ -3,7 +3,6 @@ from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
-from django.contrib.auth.hashers import make_password
 
 
 class CustomUserManager(BaseUserManager):
@@ -30,6 +29,7 @@ class CustomUserManager(BaseUserManager):
         user.last_name = last_name
         user.set_password(password)  # change password to hash
         user.admin = False
+        user.staff = False
         user.save(using=self._db)
         return user
 
@@ -54,6 +54,7 @@ class CustomUserManager(BaseUserManager):
         user.last_name = last_name
         user.set_password(password)  # change password to hash
         user.admin = True
+        user.staff = True
         user.save(using=self._db)
         return user
 
@@ -71,7 +72,8 @@ class CustomUser(AbstractBaseUser):
     last_name = models.CharField(
         verbose_name='last name',
         max_length=255)
-    admin = models.BooleanField(default=False)  # a superuser
+    admin = models.BooleanField(default=False)
+    staff = models.BooleanField(default=False) 
 
     USERNAME_FIELD = 'email'
     # Since Email & Password are required by default,
@@ -79,6 +81,9 @@ class CustomUser(AbstractBaseUser):
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
     objects = CustomUserManager()
+
+    class Meta:
+        unique_together = ('first_name', 'last_name')
 
     def __str__(self):
         return f"{self.email}"
@@ -99,3 +104,8 @@ class CustomUser(AbstractBaseUser):
     def is_admin(self):
         "Is the user a admin member?"
         return self.admin
+
+    @property
+    def is_staff(self):
+        "Is the user a member of staff?"
+        return self.staff
