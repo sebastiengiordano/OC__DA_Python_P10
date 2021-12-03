@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-
-from accounts.permissions import IsAdminAuthenticated
+# from rest_framework.response import Response
+# from rest_framework.decorators import action
 
 from issue_tracking_system.models import Projects, Contributors
 from issue_tracking_system.serializers import ProjectsSerializer
@@ -34,5 +34,10 @@ class ProjectView(viewsets.ModelViewSet):
         user = self.request.user
         # Retrun user's projects
         queryset = Contributors.objects.filter(user=user)
-        projects_id = [id for id in queryset]
+        projects_id = [query.id for query in queryset]
         return Projects.objects.filter(pk__in=projects_id)
+
+    # @action(detail=True, methods=['post'])
+    # def disable(self, request, pk):
+    #     self.get_object().disable()
+    #     return Response()

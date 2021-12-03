@@ -9,10 +9,10 @@ PROJECT_TYPE = (
     ('Android', 'Android')
     )
 
-CONTRIBUTORS_PERMISSIONS = [
+CONTRIBUTORS_PERMISSIONS = (
     ('All', 'All'),
     ('Read_Only', 'Read_Only')
-]
+)
 
 
 class Projects(models.Model):
@@ -49,12 +49,12 @@ class Contributors(models.Model):
     user = models.ForeignKey(
                                 settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE,
-                                verbose_name='user_contributor',
+                                related_name='user_contributor',
                                 default=0)
     project = models.ForeignKey(
                                     'issue_tracking_system.Projects',
                                     on_delete=models.CASCADE,
-                                    verbose_name='project_contributor',
+                                    related_name='project_contributor',
                                     default=0)
     permission = models.CharField(
                                     max_length=10,

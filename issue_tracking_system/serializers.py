@@ -51,7 +51,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
         project_contributor = Contributors.objects.create(
             user=user,
             project=project,
-            permission=CONTRIBUTORS_PERMISSIONS['All'],
+            permission='All',
             role='author'
             )
         project_contributor.save()
