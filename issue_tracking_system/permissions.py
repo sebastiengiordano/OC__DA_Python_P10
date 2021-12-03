@@ -1,34 +1,23 @@
-from rest_framework.permissions import BasePermission
-
-from issue_tracking_system.serializers import ContributorsSerializer
+from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
-class IsProjectAuthor(BasePermission):
-    '''Permission for project's author.'''
+class ProjectPermission(BasePermission):
+    '''Permission for projects.'''
 
     def has_permission(self, request, view):
-        # This permissions only allow the project's author
-        project = view.get_object()
-        return bool(request.user
-                    and request.user.is_authenticated
-                    and project.author_user_id == request.user.id)
-
-
-class IsProjectContributor(BasePermission):
-    '''Permission for project's contributor.'''
-
-    def has_permission(self, request, view):
-        project = view.get_object()
-        contributors = project.project_contributor.all()
-        serializer = ContributorsSerializer(contributors, many=True)
-        if view.action == 'list' or view.action == 'retrieve':
-            return bool(request.user
-                        and request.user.is_authenticated
-                        and request.user.id in serializer.data['user_id'])
-        else:
-            return False
+        return bool(request.user.is_authenticated)
 
     def has_object_permission(self, request, view, obj):
-        # Deny actions on project since this user is a contributor
-        # not the author.
+        # Admin has all permissions
+        if request.user.is_admin:
+            return True
+
+        # Author has all permissions
+        if obj.author == request.user:
+            return True
+
+        # Contributors could only has read action
+        if request.method in SAFE_METHODS:
+            return True
+
         return False
