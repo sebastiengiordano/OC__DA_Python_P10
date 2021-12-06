@@ -4,15 +4,26 @@ from rest_framework.permissions import IsAuthenticated
 # from rest_framework.decorators import action
 
 from issue_tracking_system.models import Projects, Contributors
-from issue_tracking_system.serializers import ProjectsSerializer
+from issue_tracking_system.serializers import ProjectsSerializer, ProjectsDetailSerializer
 from issue_tracking_system.permissions import ProjectPermission
 
 
-class ProjectView(viewsets.ModelViewSet):
+class MultipleSerializerMixin:
+
+    detail_serializer_class = None
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve' and self.detail_serializer_class is not None:
+            return self.detail_serializer_class
+        return super().get_serializer_class()
+
+
+class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
     '''Class which manage all project's actions.
     '''
 
     serializer_class = ProjectsSerializer
+    detail_serializer_class = ProjectsDetailSerializer
 
     def get_permissions(self):
         """

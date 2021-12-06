@@ -6,31 +6,8 @@ from issue_tracking_system.models import Projects, Contributors,\
     CONTRIBUTORS_PERMISSIONS
 
 
-class ProjectsSerializer(serializers.ModelSerializer):
-    '''Serializer of project.'''
-
-    project_id = serializers.SerializerMethodField()
-    # title = serializers.CharField(
-    #     required=True,
-    #     validators=[UniqueValidator(queryset=Projects.objects.all())])
-    # description = serializers.TextField(required=True)
-    # type = serializers.CharField(required=True)
-    author_user_id = serializers.SerializerMethodField()
-
-    contributors = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Projects
-        fields = [
-            'project_id',
-            'title',
-            'description',
-            'type',
-            'author_user_id',
-            'contributors',
-            'date_created',
-            'date_updated'
-            ]
+class ProjectsSerializerMethods(serializers.ModelSerializer):
+    '''Methods used for project's serializers.'''
 
     def create(self, validated_data):
         """Creates and saves a Projects and
@@ -76,6 +53,45 @@ class ProjectsSerializer(serializers.ModelSerializer):
         queryset = instance.project_contributor.all()
         serializer = ContributorsSerializer(queryset, many=True)
         return serializer.data
+
+
+class ProjectsSerializer(ProjectsSerializerMethods):
+    '''Serializer of project.'''
+
+    project_id = serializers.SerializerMethodField()
+    author_user_id = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Projects
+        fields = [
+            'project_id',
+            'title',
+            'description',
+            'type',
+            'author_user_id'
+            ]
+
+
+class ProjectsDetailSerializer(ProjectsSerializerMethods):
+    '''Detail serializer of project.'''
+
+    project_id = serializers.SerializerMethodField()
+    author_user_id = serializers.SerializerMethodField()
+
+    contributors = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Projects
+        fields = [
+            'project_id',
+            'title',
+            'description',
+            'type',
+            'author_user_id',
+            'contributors',
+            'date_created',
+            'date_updated'
+            ]
 
 
 class ContributorsSerializer(serializers.ModelSerializer):
