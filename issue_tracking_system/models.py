@@ -24,15 +24,17 @@ class Projects(models.Model):
     title = models.CharField(
                             verbose_name='title',
                             max_length=255,
-                            unique=True)
+                            unique=True,
+                            blank=False)
     description = models.TextField(blank=False)
     type = models.CharField(
                             max_length=10,
-                            choices=PROJECT_TYPE)
+                            choices=PROJECT_TYPE,
+                            blank=False)
     author = models.ForeignKey(
                                 'accounts.CustomUser',
                                 on_delete=models.CASCADE,
-                                related_name='author_user_id')
+                                related_name='author')
 
     REQUIRED_FIELDS = ['title', 'description', 'type', 'author']
 
@@ -66,5 +68,6 @@ class Contributors(models.Model):
     def __str__(self):
         return (
             "Contributors"
-            "\n\tid: {self.user.id}"
-            "\n\tproject id: {self.project.id}")
+            f"\n\tid: {self.user.id}"
+            f"\n\tproject id: {self.project.id}"
+            f"\n\tproject title: {self.project.title}")

@@ -9,13 +9,13 @@ from issue_tracking_system.models import Projects, Contributors,\
 class ProjectsSerializer(serializers.ModelSerializer):
     '''Serializer of project.'''
 
-    project_id = serializers.ReadOnlyField()
+    project_id = serializers.SerializerMethodField()
     # title = serializers.CharField(
     #     required=True,
     #     validators=[UniqueValidator(queryset=Projects.objects.all())])
     # description = serializers.TextField(required=True)
     # type = serializers.CharField(required=True)
-    author_user_id = serializers.ReadOnlyField()
+    author_user_id = serializers.SerializerMethodField()
 
     contributors = serializers.SerializerMethodField()
 
@@ -46,7 +46,6 @@ class ProjectsSerializer(serializers.ModelSerializer):
             type=validated_data['type'],
             author=user
             )
-        project.save()
         # Add the author as contributor
         project_contributor = Contributors.objects.create(
             user=user,
@@ -54,7 +53,10 @@ class ProjectsSerializer(serializers.ModelSerializer):
             permission='All',
             role='author'
             )
-        project_contributor.save()
+        # If project and contributor are well created,
+        # they could be save in DB.
+        # project.save()
+        # project_contributor.save()
         return project
 
     def update(self, instance, validated_data):
@@ -68,7 +70,7 @@ class ProjectsSerializer(serializers.ModelSerializer):
         return instance.id
 
     def get_author_user_id(self, instance):
-        return instance.project.author.id
+        return instance.author.id
 
     def get_contributors(self, instance):
         queryset = instance.project_contributor.all()

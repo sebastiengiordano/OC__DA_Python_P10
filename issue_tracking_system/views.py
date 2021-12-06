@@ -32,9 +32,9 @@ class ProjectView(viewsets.ModelViewSet):
     def get_queryset(self):
         # Get the current user
         user = self.request.user
-        # Retrun user's projects
+        # Return user's projects
         queryset = Contributors.objects.filter(user=user)
-        projects_id = [query.id for query in queryset]
+        projects_id = [query.project.id for query in queryset]
         return Projects.objects.filter(pk__in=projects_id)
 
     # @action(detail=True, methods=['post'])
