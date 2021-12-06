@@ -11,7 +11,7 @@ router.register('user', UserView, basename='user')
 app_name = 'accounts'
 urlpatterns = [
     # For JWT tokens management
-    path('token/obtain/', TokenObtainPairView.as_view(), name='token_obtain'),
+    path('login/', TokenObtainPairView.as_view(), name='login'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     # For register a new CustomUser
     path('signup/', RegisterView.as_view(), name='register'),
