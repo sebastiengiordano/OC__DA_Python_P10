@@ -32,9 +32,9 @@ class Projects(models.Model):
                             choices=PROJECT_TYPE,
                             blank=False)
     author = models.ForeignKey(
-                                'accounts.CustomUser',
-                                on_delete=models.CASCADE,
-                                related_name='author')
+                            'accounts.CustomUser',
+                            on_delete=models.CASCADE,
+                            related_name='author')
 
     REQUIRED_FIELDS = ['title', 'description', 'type', 'author']
 
@@ -54,16 +54,19 @@ class Contributors(models.Model):
                                 related_name='user_contributor',
                                 default=0)
     project = models.ForeignKey(
-                                    'issue_tracking_system.Projects',
-                                    on_delete=models.CASCADE,
-                                    related_name='project_contributor',
-                                    default=0)
+                                'issue_tracking_system.Projects',
+                                on_delete=models.CASCADE,
+                                related_name='project_contributor',
+                                default=0)
     permission = models.CharField(
-                                    max_length=10,
-                                    choices=CONTRIBUTORS_PERMISSIONS)
+                                max_length=10,
+                                choices=CONTRIBUTORS_PERMISSIONS)
     role = models.CharField(
-                            verbose_name='role',
-                            max_length=255)
+                                verbose_name='role',
+                                max_length=255)
+
+    class Meta:
+        unique_together = ('user', 'project')
 
     def __str__(self):
         return (

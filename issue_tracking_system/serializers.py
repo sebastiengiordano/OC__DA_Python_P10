@@ -1,9 +1,7 @@
 from rest_framework import serializers
-from rest_framework.fields import ReadOnlyField
-from rest_framework.validators import UniqueValidator
+from rest_framework.validators import UniqueTogetherValidator
 
-from issue_tracking_system.models import Projects, Contributors,\
-    CONTRIBUTORS_PERMISSIONS
+from issue_tracking_system.models import Projects, Contributors
 
 
 class ProjectsSerializerMethods(serializers.ModelSerializer):
@@ -15,7 +13,7 @@ class ProjectsSerializerMethods(serializers.ModelSerializer):
         """
 
         # Get the current user
-        user =  self.context['request'].user
+        user = self.context['request'].user
         # Create the project
         project = Projects.objects.create(
             title=validated_data['title'],
@@ -24,21 +22,19 @@ class ProjectsSerializerMethods(serializers.ModelSerializer):
             author=user
             )
         # Add the author as contributor
-        project_contributor = Contributors.objects.create(
+        Contributors.objects.create(
             user=user,
             project=project,
             permission='All',
             role='author'
             )
-        # If project and contributor are well created,
-        # they could be save in DB.
-        # project.save()
-        # project_contributor.save()
         return project
 
     def update(self, instance, validated_data):
         instance.title = validated_data.get('title', instance.title)
-        instance.description = validated_data.get('description', instance.description)
+        instance.description = validated_data.get(
+            'description',
+            instance.description)
         instance.type = validated_data.get('type', instance.type)
         instance.save()
         return instance
@@ -48,6 +44,9 @@ class ProjectsSerializerMethods(serializers.ModelSerializer):
 
     def get_author_user_id(self, instance):
         return instance.author.id
+
+    def get_author_user_email(self, instance):
+        return instance.author.email
 
     def get_contributors(self, instance):
         queryset = instance.project_contributor.all()
@@ -77,6 +76,7 @@ class ProjectsDetailSerializer(ProjectsSerializerMethods):
 
     project_id = serializers.SerializerMethodField()
     author_user_id = serializers.SerializerMethodField()
+    author_user_email = serializers.SerializerMethodField()
 
     contributors = serializers.SerializerMethodField()
 
@@ -88,6 +88,7 @@ class ProjectsDetailSerializer(ProjectsSerializerMethods):
             'description',
             'type',
             'author_user_id',
+            'author_user_email',
             'contributors',
             'date_created',
             'date_updated'
@@ -110,9 +111,21 @@ class ContributorsSerializer(serializers.ModelSerializer):
             'date_created',
             'date_updated'
             ]
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Contributors.objects.all(),
+                fields=['user_id', 'project_id']
+            )
+        ]
 
     def get_user_id(self, instance):
         return instance.user.id
 
     def get_project_id(self, instance):
         return instance.project.id
+
+
+class ManageContributorSerializer(serializers.Serializer):
+    '''Serializer to check request which add a new contributor to a project.'''
+
+    email = serializers.EmailField(write_only=True)

@@ -42,9 +42,10 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'issue_tracking_system.apps.IssueTrackingSystemConfig',
 ]
- 
+
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',)
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
+    'EXCEPTION_HANDLER':'issue_tracking_system.utils.custom_exception_handler'
 }
 
 MIDDLEWARE = [
