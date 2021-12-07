@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 from django.conf import settings
 
 
@@ -41,6 +41,16 @@ class Projects(models.Model):
     def __str__(self):
         return self.title
 
+    @transaction.atomic
+    def add_contributor(self, user, project):
+        # Add a contributor
+        project_contributor = Contributors.objects.create(
+            user=user,
+            project=project,
+            permission='Read_Only',
+            role='contributor'
+            )
+        project_contributor.save()
 
 class Contributors(models.Model):
     '''This class aims to defined contributors.'''
@@ -64,6 +74,9 @@ class Contributors(models.Model):
     role = models.CharField(
                             verbose_name='role',
                             max_length=255)
+
+    class Meta:
+        unique_together = ('user', 'project')
 
     def __str__(self):
         return (

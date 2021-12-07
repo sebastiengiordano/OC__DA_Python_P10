@@ -1,11 +1,16 @@
 from rest_framework import viewsets
+from rest_framework.serializers import ValidationError
 from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.decorators import action
+
+from django.shortcuts import get_object_or_404
 
 from issue_tracking_system.models import Projects, Contributors
 from issue_tracking_system.serializers import ProjectsSerializer, ProjectsDetailSerializer
 from issue_tracking_system.permissions import ProjectPermission
+
+from accounts.models import CustomUser
 
 
 class MultipleSerializerMixin:
@@ -48,7 +53,17 @@ class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
         projects_id = [query.project.id for query in queryset]
         return Projects.objects.filter(pk__in=projects_id)
 
-    # @action(detail=True, methods=['post'])
-    # def disable(self, request, pk):
-    #     self.get_object().disable()
-    #     return Response()
+    @action(detail=True, methods=['post'], url_path='<int:project_id>/users/')
+    def add_contributor(self, request, project_id):
+        # Check if email field is valid
+        user_email = request.data.get('email')
+        if user_email is None or user_email == "":
+            raise ValidationError(
+                {'email': ['This field may not be blank.']})
+        # Get user by email
+        user = get_object_or_404(CustomUser, email=user_email)
+        # Get project by id
+        project = get_object_or_404(Projects, id=project_id)
+        # Create contributor
+        self.get_object().add_contributor(user, project)
+        return Response()
