@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from django.shortcuts import get_object_or_404
+from django.core.serializers import serialize
+from django.http import JsonResponse
 
 from issue_tracking_system.models import Projects, Contributors
 from issue_tracking_system.serializers import ProjectsSerializer, ProjectsDetailSerializer
@@ -57,7 +59,10 @@ class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
     def add_contributor(self, request, project_id):
         # Check if email field is valid
         user_email = request.data.get('email')
-        if user_email is None or user_email == "":
+        if user_email is None:
+            raise ValidationError(
+                {'email': ['This field is required.']})
+        if user_email == "":
             raise ValidationError(
                 {'email': ['This field may not be blank.']})
         # Get user by email
@@ -67,3 +72,10 @@ class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
         # Create contributor
         self.get_object().add_contributor(user, project)
         return Response()
+
+    @action(detail=False, methods=['get'], url_path='(?P<project_id>[0-9]+)/users')
+    # @action(detail=False, methods=['get'], url_path='users')
+    def get_contributor(self, request):
+        queryset = self.get_object().get_contributor(project_id)
+        data = serialize('json', queryset)
+        return JsonResponse(data)

@@ -52,6 +52,11 @@ class Projects(models.Model):
             )
         project_contributor.save()
 
+    @transaction.atomic
+    def get_contributor(self, project_id):
+        # Get contributor
+        return Contributors.objects.filter(projet__id=project_id)
+
 class Contributors(models.Model):
     '''This class aims to defined contributors.'''
 
