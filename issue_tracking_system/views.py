@@ -3,13 +3,14 @@ from rest_framework.serializers import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.exceptions import ParseError
 
 from django.shortcuts import get_object_or_404
-from django.core.serializers import serialize
-from django.http import JsonResponse
 
 from issue_tracking_system.models import Projects, Contributors
-from issue_tracking_system.serializers import ProjectsSerializer, ProjectsDetailSerializer
+from issue_tracking_system.serializers import \
+    ProjectsSerializer, ProjectsDetailSerializer, \
+    ContributorsSerializer
 from issue_tracking_system.permissions import ProjectPermission
 
 from accounts.models import CustomUser
@@ -55,7 +56,8 @@ class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
         projects_id = [query.project.id for query in queryset]
         return Projects.objects.filter(pk__in=projects_id)
 
-    @action(detail=True, methods=['post'], url_path='<int:project_id>/users/')
+    @action(detail=False, methods=['post'], url_path='(?P<project_id>[0-9]+)/users')
+    # @action(detail=True, methods=['post'], url_path='<int:project_id>/users/')
     def add_contributor(self, request, project_id):
         # Check if email field is valid
         user_email = request.data.get('email')
@@ -75,7 +77,7 @@ class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'], url_path='(?P<project_id>[0-9]+)/users')
     # @action(detail=False, methods=['get'], url_path='users')
-    def get_contributor(self, request):
-        queryset = self.get_object().get_contributor(project_id)
-        data = serialize('json', queryset)
-        return JsonResponse(data)
+    def get_contributor(self, request, project_id):
+        queryset = Contributors.objects.filter(project__id=project_id)
+        serializer = ContributorsSerializer(queryset, many=True)
+        return Response(serializer.data)
