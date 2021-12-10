@@ -1,19 +1,18 @@
 from rest_framework import viewsets
-from rest_framework.serializers import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.exceptions import ParseError
 
 from django.shortcuts import get_object_or_404
 
 from issue_tracking_system.models import Projects, Contributors
 from issue_tracking_system.serializers import \
     ProjectsSerializer, ProjectsDetailSerializer, \
-    ContributorsSerializer
+    ContributorsSerializer, ManageContributorSerializer
 from issue_tracking_system.permissions import ProjectPermission
 
 from accounts.models import CustomUser
+from accounts.serializers import CustomUserSerializer
 
 
 class MultipleSerializerMixin:
@@ -21,7 +20,9 @@ class MultipleSerializerMixin:
     detail_serializer_class = None
 
     def get_serializer_class(self):
-        if self.action == 'retrieve' and self.detail_serializer_class is not None:
+        if (
+                self.action == 'retrieve'
+                and self.detail_serializer_class is not None):
             return self.detail_serializer_class
         return super().get_serializer_class()
 
@@ -35,7 +36,8 @@ class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
 
     def get_permissions(self):
         """
-        Instantiates and returns the list of permissions that this view require.
+        Instantiates and returns the list of
+        permissions that this view require.
 
         All authentified persons can create a project.
         Project's author can used all others actions.
@@ -56,28 +58,54 @@ class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
         projects_id = [query.project.id for query in queryset]
         return Projects.objects.filter(pk__in=projects_id)
 
-    @action(detail=False, methods=['post'], url_path='(?P<project_id>[0-9]+)/users')
-    # @action(detail=True, methods=['post'], url_path='<int:project_id>/users/')
-    def add_contributor(self, request, project_id):
-        # Check if email field is valid
-        user_email = request.data.get('email')
-        if user_email is None:
-            raise ValidationError(
-                {'email': ['This field is required.']})
-        if user_email == "":
-            raise ValidationError(
-                {'email': ['This field may not be blank.']})
-        # Get user by email
-        user = get_object_or_404(CustomUser, email=user_email)
-        # Get project by id
-        project = get_object_or_404(Projects, id=project_id)
-        # Create contributor
-        self.get_object().add_contributor(user, project)
-        return Response()
+    @action(
+        detail=False, methods=['post', 'get', 'delete'],
+        url_path='(?P<project_id>[0-9]+)/users')
+    def manage_contributor(self, request, project_id):
+        # Add a contributor to the project
+        if request.method == 'POST':
+            # Validate data
+            serializer = ManageContributorSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            # Get user by email
+            user = get_object_or_404(
+                CustomUser,
+                email=serializer.validated_data['email'])
+            # Get project by id
+            project = get_object_or_404(Projects, id=project_id)
+            # Check if the user has permissions
+            self.check_object_permissions(request, project)
+            # Create contributor
+            contributor = Contributors.objects.create(
+                user=user,
+                project=project,
+                permission='Read_Only',
+                role='contributor'
+                )
+            return Response(ContributorsSerializer(contributor).data)
 
-    @action(detail=False, methods=['get'], url_path='(?P<project_id>[0-9]+)/users')
-    # @action(detail=False, methods=['get'], url_path='users')
-    def get_contributor(self, request, project_id):
-        queryset = Contributors.objects.filter(project__id=project_id)
-        serializer = ContributorsSerializer(queryset, many=True)
-        return Response(serializer.data)
+        # Get project's contributors list
+        elif request.method == 'GET':
+            queryset = Contributors.objects.filter(project__id=project_id)
+            serializer = ContributorsSerializer(queryset, many=True)
+            return Response(serializer.data)
+
+        # Get project's contributors list
+        elif request.method == 'DELETE':
+            # Validate data
+            serializer = ManageContributorSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            # Get user by email
+            user = get_object_or_404(
+                CustomUser,
+                email=serializer.validated_data['email'])
+            # Get project by id
+            project = get_object_or_404(Projects, id=project_id)
+            # Check if the user has permissions
+            self.check_object_permissions(request, project)
+            # Removed contributor of this project
+            contributor = get_object_or_404(
+                Contributors,
+                user=user,
+                project=project).delete()
+            return Response(CustomUserSerializer(user).data)
