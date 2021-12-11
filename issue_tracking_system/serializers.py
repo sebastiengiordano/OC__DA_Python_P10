@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from issue_tracking_system.models import Projects, Contributors
+from issue_tracking_system.models import Projects, Contributors, Issues
 
 
 class ProjectsSerializerMethods(serializers.ModelSerializer):
@@ -111,12 +111,6 @@ class ContributorsSerializer(serializers.ModelSerializer):
             'date_created',
             'date_updated'
             ]
-        validators = [
-            UniqueTogetherValidator(
-                queryset=Contributors.objects.all(),
-                fields=['user_id', 'project_id']
-            )
-        ]
 
     def get_user_id(self, instance):
         return instance.user.id
@@ -129,3 +123,35 @@ class ManageContributorSerializer(serializers.Serializer):
     '''Serializer to check request which add a new contributor to a project.'''
 
     email = serializers.EmailField(write_only=True)
+
+
+class IssuesSerializer(serializers.ModelSerializer):
+    '''Serializer of issue.'''
+
+    project_id = serializers.SerializerMethodField(read_only=True)
+    author_user_id = serializers.SerializerMethodField(read_only=True)
+    assignee_user_id = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Issues
+        fields = [
+            'title',
+            'description',
+            'tag',
+            'priority',
+            'project_id',
+            'status',
+            'author_user_id',
+            'assignee_user_id',
+            'date_created',
+            'date_updated'
+            ]
+
+    def get_project_id(self, instance):
+        return instance.project.id
+
+    def get_author_user_id(self, instance):
+        return instance.author.id
+
+    def get_assignee_user_id(self, instance):
+        return instance.assignee.id

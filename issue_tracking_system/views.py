@@ -2,20 +2,25 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.views import APIView
+from rest_framework.exceptions import MethodNotAllowed
 
 from django.shortcuts import get_object_or_404
 
-from issue_tracking_system.models import Projects, Contributors
-from issue_tracking_system.serializers import \
-    ProjectsSerializer, ProjectsDetailSerializer, \
-    ContributorsSerializer, ManageContributorSerializer
-from issue_tracking_system.permissions import ProjectPermission
+from issue_tracking_system.models import (
+    Projects, Contributors, Issues)
+from issue_tracking_system.serializers import (
+    ProjectsSerializer, ProjectsDetailSerializer,
+    ContributorsSerializer, ManageContributorSerializer,
+    IssuesSerializer)
+from issue_tracking_system.permissions import ProjectPermission, IssuePermission
 
 from accounts.models import CustomUser
 from accounts.serializers import CustomUserSerializer
 
 
 class MultipleSerializerMixin:
+    '''Class used to set serializer according to action.'''
 
     detail_serializer_class = None
 
@@ -28,8 +33,7 @@ class MultipleSerializerMixin:
 
 
 class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
-    '''Class which manage all project's actions.
-    '''
+    '''View which manage all project's actions.'''
 
     serializer_class = ProjectsSerializer
     detail_serializer_class = ProjectsDetailSerializer
@@ -109,3 +113,31 @@ class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
                 user=user,
                 project=project).delete()
             return Response(CustomUserSerializer(user).data)
+
+
+class IssueView(APIView):
+    '''View which manage all issue's actions.'''
+
+    permission_classes = [IssuePermission]
+
+    def get(self, request, project_id, issue_id=None):
+        """
+        Return a list or detail of project's issues.
+        """
+
+        # Check if the user is a contributor of this project
+        project = Projects.objects.filter(pk=project_id)
+        self.check_if_project_contributor(request, project)
+        # Get all issue of this project
+        issues = Issues.objects.filter(project=project)
+        serializer = IssuesSerializer(issues, many=True)
+        return Response(serializer.data)
+
+    def check_if_project_contributor(self, request, project):
+        is_contributor = Contributors.objects.filter(
+            user=request.user,
+            project=project)
+        if not is_contributor:
+            raise MethodNotAllowed(
+                f'{request.method} is not allowed since you\'re'
+                ' not a contributor of that project.'

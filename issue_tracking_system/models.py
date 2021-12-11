@@ -14,6 +14,24 @@ CONTRIBUTORS_PERMISSIONS = (
     ('Read_Only', 'Read_Only')
 )
 
+TAG_ISSUE = (
+    ('Bug', 'Bug'),
+    ('Improvement', 'Improvement'),
+    ('Task', 'Task'),
+)
+
+PRIORITY_ISSUE = (
+    ('Low', 'Low'),
+    ('Medium', 'Medium'),
+    ('High', 'High'),
+)
+
+STATUS_ISSUE = (
+    ('To_Do', 'To_Do'),
+    ('In_Progress', 'In_Progress'),
+    ('Completed', 'Completed'),
+)
+
 
 class Projects(models.Model):
     '''This class aims to defined projects.'''
@@ -56,7 +74,7 @@ class Contributors(models.Model):
     project = models.ForeignKey(
                                 'issue_tracking_system.Projects',
                                 on_delete=models.CASCADE,
-                                related_name='project_contributor',
+                                related_name='project',
                                 default=0)
     permission = models.CharField(
                                 max_length=10,
@@ -72,5 +90,56 @@ class Contributors(models.Model):
         return (
             "Contributors"
             f"\n\tid: {self.user.id}"
+            f"\n\tproject id: {self.project.id}"
+            f"\n\tproject title: {self.project.title}")
+
+
+class Issues(models.Model):
+    '''This class aims to defined issues.'''
+
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+
+    title = models.CharField(
+                            verbose_name='title',
+                            max_length=255,
+                            blank=False)
+    description = models.TextField(blank=False)
+    tag = models.CharField(
+                            max_length=11,
+                            choices=TAG_ISSUE,
+                            blank=False)
+    priority = models.CharField(
+                            max_length=6,
+                            choices=PRIORITY_ISSUE,
+                            blank=False)
+    status = models.CharField(
+                            max_length=11,
+                            choices=STATUS_ISSUE,
+                            blank=False)
+    project = models.ForeignKey(
+                                'issue_tracking_system.Projects',
+                                on_delete=models.CASCADE,
+                                related_name='project',
+                                default=0)
+    author = models.ForeignKey(
+                            'accounts.CustomUser',
+                            on_delete=models.CASCADE,
+                            related_name='author')
+    assignee = models.ForeignKey(
+                            'accounts.CustomUser',
+                            on_delete=models.CASCADE,
+                            related_name='assignee')
+
+    REQUIRED_FIELDS = ['title', 'description', 'tag', 'priority', 'status']
+
+    class Meta:
+        unique_together = ('title', 'project')
+
+    def __str__(self):
+        return (
+            "Issue"
+            f"\n\tid: {self.id}"
+            f"\n\tid: {self.title}"
             f"\n\tproject id: {self.project.id}"
             f"\n\tproject title: {self.project.title}")
