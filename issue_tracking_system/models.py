@@ -74,7 +74,7 @@ class Contributors(models.Model):
     project = models.ForeignKey(
                                 'issue_tracking_system.Projects',
                                 on_delete=models.CASCADE,
-                                related_name='project',
+                                related_name='project_contributor',
                                 default=0)
     permission = models.CharField(
                                 max_length=10,
@@ -120,12 +120,12 @@ class Issues(models.Model):
     project = models.ForeignKey(
                                 'issue_tracking_system.Projects',
                                 on_delete=models.CASCADE,
-                                related_name='project',
+                                related_name='project_issue',
                                 default=0)
     author = models.ForeignKey(
                             'accounts.CustomUser',
                             on_delete=models.CASCADE,
-                            related_name='author')
+                            related_name='author_issue')
     assignee = models.ForeignKey(
                             'accounts.CustomUser',
                             on_delete=models.CASCADE,

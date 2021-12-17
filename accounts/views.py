@@ -30,7 +30,7 @@ class UserView(viewsets.GenericViewSet,
         Instantiates and returns the list of permissions that this view requires.
         """
         if self.action == 'list' or self.action == 'retrieve':
-            permission_classes = [IsAuthenticated]
+            permission_classes = (IsAuthenticated,)
         else:
-            permission_classes = [IsAdminAuthenticated]
+            permission_classes = (IsAdminAuthenticated,)
         return [permission() for permission in permission_classes]

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
-from issue_tracking_system.models import Projects, Contributors, Issues
+from .models import Projects, Contributors, Issues
 
 
 class ProjectsSerializerMethods(serializers.ModelSerializer):
@@ -128,9 +128,41 @@ class ManageContributorSerializer(serializers.Serializer):
 class IssuesSerializer(serializers.ModelSerializer):
     '''Serializer of issue.'''
 
+    issue_id = serializers.SerializerMethodField()
     project_id = serializers.SerializerMethodField(read_only=True)
-    author_user_id = serializers.SerializerMethodField(read_only=True)
-    assignee_user_id = serializers.SerializerMethodField(read_only=True)
+    author_id = serializers.SerializerMethodField(read_only=True)
+    assignee_id = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Issues
+        fields = [
+            'issue_id',
+            'title',
+            'project_id',
+            'author_id',
+            'assignee_id',
+            'date_created',
+            'date_updated'
+            ]
+
+    def get_issue_id(self, instance):
+        return instance.id
+
+    def get_project_id(self, instance):
+        return instance.project.id
+
+    def get_author_id(self, instance):
+        return instance.author.id
+
+    def get_assignee_id(self, instance):
+        return instance.assignee.id
+
+
+class IssuesDetailSerializer(IssuesSerializer):
+    '''Serializer of issue for detail view.'''
+
+    author_email = serializers.SerializerMethodField(read_only=True)
+    assignee_email = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Issues
@@ -141,17 +173,16 @@ class IssuesSerializer(serializers.ModelSerializer):
             'priority',
             'project_id',
             'status',
-            'author_user_id',
-            'assignee_user_id',
+            'author_id',
+            'author_email',
+            'assignee_id',
+            'assignee_email',
             'date_created',
             'date_updated'
             ]
 
-    def get_project_id(self, instance):
-        return instance.project.id
+    def get_author_email(self, instance):
+        return instance.author.email
 
-    def get_author_user_id(self, instance):
-        return instance.author.id
-
-    def get_assignee_user_id(self, instance):
-        return instance.assignee.id
+    def get_assignee_email(self, instance):
+        return instance.assignee.email

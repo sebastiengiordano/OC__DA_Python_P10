@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -7,13 +7,14 @@ from rest_framework.exceptions import MethodNotAllowed
 
 from django.shortcuts import get_object_or_404
 
-from issue_tracking_system.models import (
+from .models import (
     Projects, Contributors, Issues)
-from issue_tracking_system.serializers import (
+from .serializers import (
     ProjectsSerializer, ProjectsDetailSerializer,
     ContributorsSerializer, ManageContributorSerializer,
-    IssuesSerializer)
-from issue_tracking_system.permissions import ProjectPermission, IssuePermission
+    IssuesSerializer, IssuesDetailSerializer)
+from .permissions import (
+    ProjectPermission, IssuePermission)
 
 from accounts.models import CustomUser
 from accounts.serializers import CustomUserSerializer
@@ -49,9 +50,9 @@ class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
         Admin has all permissions.
         """
         if self.action == 'create':
-            permission_classes = [IsAuthenticated]
+            permission_classes = (IsAuthenticated,)
         else:
-            permission_classes = [ProjectPermission]
+            permission_classes = (ProjectPermission,)
         return [permission() for permission in permission_classes]
 
     def get_queryset(self):
@@ -118,19 +119,59 @@ class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
 class IssueView(APIView):
     '''View which manage all issue's actions.'''
 
-    permission_classes = [IssuePermission]
+    permission_classes = (IssuePermission,)
+
+    def post(self, request, project_id):
+        """
+        Create a project's issue.
+        """
+        # Get project by id
+        project = get_object_or_404(Projects, id=project_id)
+        # Check if the user is a contributor of this project
+        self.check_if_project_contributor(request, project)
+        # Check if request data is valid
+        serializer = IssuesDetailSerializer(data=request.data)
+        if serializer.is_valid():
+            # Get or set assignee
+            email = request.data.get('assignee')
+            if email is None:
+                assignee = request.user
+            else:
+                assignee = get_object_or_404(CustomUser, email=email)
+            # Create the issue
+            issue = Issues.objects.create(
+                title=serializer.validated_data['title'],
+                description=serializer.validated_data['description'],
+                tag=serializer.validated_data['tag'],
+                priority=serializer.validated_data['priority'],
+                status=serializer.validated_data['status'],
+                project=project,
+                author=request.user,
+                assignee=assignee
+            )
+            serializer = IssuesDetailSerializer(issue)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, project_id, issue_id=None):
         """
         Return a list or detail of project's issues.
         """
 
+        # Get project by id
+        project = get_object_or_404(Projects, id=project_id)
         # Check if the user is a contributor of this project
-        project = Projects.objects.filter(pk=project_id)
         self.check_if_project_contributor(request, project)
-        # Get all issue of this project
-        issues = Issues.objects.filter(project=project)
-        serializer = IssuesSerializer(issues, many=True)
+        # Check if a list is required
+        if issue_id is None:
+            # Get all issue of this project
+            issues = Issues.objects.filter(project=project)
+            serializer = IssuesSerializer(issues, many=True)
+        # Or if its a detail request
+        else:
+            # Get issue by id
+            issue = get_object_or_404(Issues, pk=issue_id)
+            serializer = IssuesDetailSerializer(issue)
         return Response(serializer.data)
 
     def check_if_project_contributor(self, request, project):
@@ -140,4 +181,4 @@ class IssueView(APIView):
         if not is_contributor:
             raise MethodNotAllowed(
                 f'{request.method} is not allowed since you\'re'
-                ' not a contributor of that project.'
+                ' not a contributor of that project.')

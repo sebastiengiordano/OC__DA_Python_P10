@@ -3,7 +3,7 @@ from django.urls import path, include
 
 from rest_framework import routers
 
-from issue_tracking_system.views import ProjectView
+from .views import ProjectView, IssueView
 
 
 router = routers.SimpleRouter()
@@ -13,4 +13,12 @@ app_name = 'issue_tracking_system'
 
 urlpatterns = [
     path('', include(router.urls)),
+    path(
+        'projects/<int:project_id>/issues/',
+        IssueView.as_view(),
+        name='issue_create_list'),
+    path(
+        'projects/<int:project_id>/issues/<int:issue_id>/',
+        IssueView.as_view(),
+        name='issue_update_detail'),
 ]
