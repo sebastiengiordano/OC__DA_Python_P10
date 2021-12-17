@@ -98,12 +98,14 @@ class ContributorsSerializer(serializers.ModelSerializer):
     '''Serializer of contributor.'''
 
     user_id = serializers.SerializerMethodField(read_only=True)
+    user_email = serializers.SerializerMethodField(read_only=True)
     project_id = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Contributors
         fields = [
             'user_id',
+            'user_email',
             'project_id',
             'permission',
             'role',
@@ -113,6 +115,9 @@ class ContributorsSerializer(serializers.ModelSerializer):
 
     def get_user_id(self, instance):
         return instance.user.id
+
+    def get_user_email(self, instance):
+        return instance.user.email
 
     def get_project_id(self, instance):
         return instance.project.id
@@ -124,7 +129,29 @@ class ManageContributorSerializer(serializers.Serializer):
     email = serializers.EmailField(write_only=True)
 
 
-class IssuesSerializer(serializers.ModelSerializer):
+class IssuesSerializerMethods(serializers.ModelSerializer):
+    '''Methods used for issue's serializers.'''
+
+    def get_issue_id(self, instance):
+        return instance.id
+
+    def get_project_id(self, instance):
+        return instance.project.id
+
+    def get_author_id(self, instance):
+        return instance.author.id
+
+    def get_assignee_id(self, instance):
+        return instance.assignee.id
+
+    def get_author_email(self, instance):
+        return instance.author.email
+
+    def get_assignee_email(self, instance):
+        return instance.assignee.email
+
+
+class IssuesSerializer(IssuesSerializerMethods):
     '''Serializer of issue.'''
 
     issue_id = serializers.SerializerMethodField()
@@ -144,28 +171,18 @@ class IssuesSerializer(serializers.ModelSerializer):
             'date_updated'
             ]
 
-    def get_issue_id(self, instance):
-        return instance.id
-
-    def get_project_id(self, instance):
-        return instance.project.id
-
-    def get_author_id(self, instance):
-        return instance.author.id
-
-    def get_assignee_id(self, instance):
-        return instance.assignee.id
-
 
 class IssuesDetailSerializer(IssuesSerializer):
     '''Serializer of issue for detail view.'''
 
+    issue_id = serializers.SerializerMethodField()
     author_email = serializers.SerializerMethodField(read_only=True)
     assignee_email = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Issues
         fields = [
+            'issue_id',
             'title',
             'description',
             'tag',
@@ -179,12 +196,6 @@ class IssuesDetailSerializer(IssuesSerializer):
             'date_created',
             'date_updated'
             ]
-
-    def get_author_email(self, instance):
-        return instance.author.email
-
-    def get_assignee_email(self, instance):
-        return instance.assignee.email
 
 
 class IssuesUpdateSerializer(serializers.ModelSerializer):
