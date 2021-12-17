@@ -1,7 +1,7 @@
 from django.db import IntegrityError
 from django.http import Http404
-from rest_framework.views import Response, exception_handler
 from rest_framework import status
+from rest_framework.views import Response, exception_handler
 
 from .views import ProjectView, IssueView
 
@@ -50,20 +50,16 @@ def custom_exception_handler(exc, context):
             },
             status=status.HTTP_400_BAD_REQUEST)
 
-    # Else if there is an Http404 response and
-    # it concerned the put methode to update an issue
-    elif (
-            isinstance(exc, Http404)
-            and isinstance(context.get('view'), IssueView)
-            and 'POST' in dir(request)
-            and 'issue_id' in context['kwargs']):
+    # Else if there is an Http404 response
+    # send more explicit response
+    elif isinstance(exc, Http404):
         response = Response(
             {
                 "detail_not_found": [
-                    "No CustomUser matches the given query."
+                    f"{exc.args[0]}"
                     ]
             },
-            status=status.HTTP_400_BAD_REQUEST
+            status=status.HTTP_404_NOT_FOUND
         )
 
     return response
