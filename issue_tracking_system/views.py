@@ -12,7 +12,7 @@ from .models import (
 from .serializers import (
     ProjectsSerializer, ProjectsDetailSerializer,
     ContributorsSerializer, ManageContributorSerializer,
-    IssuesSerializer, IssuesDetailSerializer)
+    IssuesSerializer, IssuesDetailSerializer, IssuesUpdateSerializer)
 from .permissions import (
     ProjectPermission, IssuePermission)
 
@@ -133,11 +133,7 @@ class IssueView(APIView):
         serializer = IssuesDetailSerializer(data=request.data)
         if serializer.is_valid():
             # Get or set assignee
-            email = request.data.get('assignee')
-            if email is None:
-                assignee = request.user
-            else:
-                assignee = get_object_or_404(CustomUser, email=email)
+            assignee = self.get_or_set_assignee(request, request.user)
             # Create the issue
             issue = Issues.objects.create(
                 title=serializer.validated_data['title'],
@@ -174,6 +170,26 @@ class IssueView(APIView):
             serializer = IssuesDetailSerializer(issue)
         return Response(serializer.data)
 
+    def put(self, request, project_id, issue_id):
+        """
+        Update a project's issue.
+        """
+        # Get project by id
+        project = get_object_or_404(Projects, id=project_id)
+        # Check if the user is a contributor of this project
+        self.check_if_project_contributor(request, project)
+        # Get issue by id
+        issue = get_object_or_404(Issues, id=issue_id)
+        # Get the request data or keep those on the issue
+        data, assignee = self.get_or_keep_issue_data(issue, request)
+        # Check if request data is valid
+        serializer = IssuesUpdateSerializer(data=data)
+        if serializer.is_valid():
+            # Udate the issue
+            self.update_issue(issue, serializer.validated_data, assignee)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def check_if_project_contributor(self, request, project):
         is_contributor = Contributors.objects.filter(
             user=request.user,
@@ -182,3 +198,43 @@ class IssueView(APIView):
             raise MethodNotAllowed(
                 f'{request.method} is not allowed since you\'re'
                 ' not a contributor of that project.')
+
+    def get_or_set_assignee(self, request, assignee):
+        '''This method aims to get the assignee from request,
+        or, if he's not provided, return the one provided.
+        '''
+
+        email = request.data.get('assignee')
+        if email is not None:
+            assignee = get_object_or_404(CustomUser, email=email)
+        return assignee
+
+    def get_or_keep_issue_data(self, issue, request):
+        '''This method aims to get the update value of an issue,
+        or, if there are not provided, it keeps the issue value.
+        '''
+
+        data = {}
+        data['title'] = request.data.get('title') or issue.title
+        data['description'] = (
+            request.data.get('description') or issue.description)
+        data['tag'] = request.data.get('tag') or issue.tag
+        data['priority'] = request.data.get('priority') or issue.priority
+        data['status'] = request.data.get('status') or issue.status
+        data['project'] = issue.project.id
+        data['author'] = issue.author.id
+        # Get or set assignee
+        assignee = self.get_or_set_assignee(request, issue.assignee)
+        data['assignee'] = assignee.id
+        return data, assignee
+
+    def update_issue(self, issue, validated_data, assignee):
+        '''This method aims to update an issue'''
+
+        issue.title = validated_data['title']
+        issue.description = validated_data['description']
+        issue.tag = validated_data['tag']
+        issue.priority = validated_data['priority']
+        issue.status = validated_data['status']
+        issue.assignee = assignee
+        issue.save()

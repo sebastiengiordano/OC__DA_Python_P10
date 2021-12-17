@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
 
 from .models import Projects, Contributors, Issues
 
@@ -186,3 +185,23 @@ class IssuesDetailSerializer(IssuesSerializer):
 
     def get_assignee_email(self, instance):
         return instance.assignee.email
+
+
+class IssuesUpdateSerializer(serializers.ModelSerializer):
+    '''Serializer of issue for update purpose.'''
+
+    class Meta:
+        model = Issues
+        fields = [
+            'title',
+            'description',
+            'tag',
+            'priority',
+            'project',
+            'status',
+            'author',
+            'assignee'
+            ]
+
+    def get_unique_together_validators(self):
+        return []

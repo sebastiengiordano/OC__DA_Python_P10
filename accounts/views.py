@@ -15,10 +15,10 @@ class RegisterView(generics.CreateAPIView):
 
 
 class UserView(viewsets.GenericViewSet,
-                mixins.ListModelMixin,
-                mixins.RetrieveModelMixin,
-                mixins.UpdateModelMixin,
-                mixins.DestroyModelMixin):
+               mixins.ListModelMixin,
+               mixins.RetrieveModelMixin,
+               mixins.UpdateModelMixin,
+               mixins.DestroyModelMixin):
     '''Class which manage the
     list, retrieve, update and destroy actions.
     '''
@@ -27,7 +27,8 @@ class UserView(viewsets.GenericViewSet,
 
     def get_permissions(self):
         """
-        Instantiates and returns the list of permissions that this view requires.
+        Instantiates and returns the list of permissions
+        that this view requires.
         """
         if self.action == 'list' or self.action == 'retrieve':
             permission_classes = (IsAuthenticated,)
