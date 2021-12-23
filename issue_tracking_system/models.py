@@ -143,3 +143,30 @@ class Issues(models.Model):
             f"\n\tid: {self.title}"
             f"\n\tproject id: {self.project.id}"
             f"\n\tproject title: {self.project.title}")
+
+
+class Comments(models.Model):
+    '''This class aims to defined issues.'''
+
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+
+    description = models.TextField(blank=False)
+    author = models.ForeignKey(
+                            'accounts.CustomUser',
+                            on_delete=models.CASCADE,
+                            related_name='author_issue')
+    issue = models.ForeignKey(
+                            'issue_tracking_system.Issues',
+                            on_delete=models.CASCADE,
+                            related_name='issue_comment',
+                            default=0)
+
+    REQUIRED_FIELDS = ['description']
+
+    def __str__(self):
+        return (
+            "Comment"
+            f"\n\tid: {self.id}"
+            f"\n\tissue id: {self.issue.id}"
+            f"\n\tissue title: {self.issue.title}")

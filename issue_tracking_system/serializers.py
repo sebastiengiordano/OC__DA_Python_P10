@@ -216,3 +216,24 @@ class IssuesUpdateSerializer(serializers.ModelSerializer):
 
     def get_unique_together_validators(self):
         return []
+
+
+class CommentsSerializer(IssuesSerializerMethods):
+    '''Serializer of issue.'''
+
+    issue_id = serializers.SerializerMethodField()
+    project_id = serializers.SerializerMethodField(read_only=True)
+    author_id = serializers.SerializerMethodField(read_only=True)
+    assignee_id = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Issues
+        fields = [
+            'issue_id',
+            'title',
+            'project_id',
+            'author_id',
+            'assignee_id',
+            'date_created',
+            'date_updated'
+            ]

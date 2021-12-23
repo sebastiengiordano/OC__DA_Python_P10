@@ -23,7 +23,7 @@ class ProjectPermission(BasePermission):
         return False
 
 
-class IssuePermission(BasePermission):
+class ObjectPermission(BasePermission):
     '''Permission for issues.'''
 
     def has_permission(self, request, view):

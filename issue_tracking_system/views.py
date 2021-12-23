@@ -8,13 +8,13 @@ from rest_framework.exceptions import MethodNotAllowed
 from django.shortcuts import get_object_or_404
 
 from .models import (
-    Projects, Contributors, Issues)
+    Comments, Projects, Contributors, Issues)
 from .serializers import (
     ProjectsSerializer, ProjectsDetailSerializer,
     ContributorsSerializer, ManageContributorSerializer,
     IssuesSerializer, IssuesDetailSerializer, IssuesUpdateSerializer)
 from .permissions import (
-    ProjectPermission, IssuePermission)
+    ProjectPermission, ObjectPermission)
 
 from accounts.models import CustomUser
 from accounts.serializers import CustomUserSerializer
@@ -138,7 +138,7 @@ class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
 class IssueView(APIView):
     '''View which manage all issue's actions.'''
 
-    permission_classes = (IssuePermission,)
+    permission_classes = (ObjectPermission,)
 
     def post(self, request, project_id):
         """
@@ -283,6 +283,127 @@ class IssueView(APIView):
                 # Check if the user has permissions
                 view.check_object_permissions(request, issue)
             return issue
+
+
+class CommentView(APIView):
+    '''View which manage all comment's actions.'''
+
+    permission_classes = (ObjectPermission,)
+
+    def post(self, request, project_id, issue_id):
+        """
+        Create a project's comment.
+        """
+
+        # Check if the user is a project's contributor
+        # and has comment's permission.
+        self.check_comment_permission(request, self, project_id)
+        # Check if request data is valid
+        serializer = IssuesDetailSerializer(data=request.data)
+        if serializer.is_valid():
+            # Get or set assignee
+            assignee = self.get_or_set_assignee(request, request.user)
+            # Create the issue
+            issue = Issues.objects.create(
+                title=serializer.validated_data['title'],
+                description=serializer.validated_data['description'],
+                tag=serializer.validated_data['tag'],
+                priority=serializer.validated_data['priority'],
+                status=serializer.validated_data['status'],
+                project=get_object_or_404(Projects, id=project_id),
+                author=request.user,
+                assignee=assignee)
+            serializer = IssuesDetailSerializer(issue)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, project_id, issue_id, comment_id=None):
+        """
+        Return a list or detail of project's issues.
+        """
+
+        # Check if the user is a project's contributor
+        # and has issue's permission.
+        self.check_issue_permission(request, self, project_id)
+        # Check if a list is required
+        if issue_id is None:
+            # Get all issue of this project
+            issues = Issues.objects.filter(project__id=project_id)
+            serializer = IssuesSerializer(issues, many=True)
+        # Or if its a detail request
+        else:
+            # Get issue by id
+            issue = get_object_or_404(Issues, pk=issue_id)
+            serializer = IssuesDetailSerializer(issue)
+        return Response(serializer.data)
+
+    def put(self, request, project_id, issue_id, comment_id):
+        """
+        Update a project's issue.
+        """
+
+        # Check if the user is a project's contributor
+        # and has project's permission.
+        issue = self.check_issue_permission(
+            request, self,
+            project_id, issue_id)
+        # Get the request data or keep those on the issue
+        data = self.get_or_keep_issue_data(issue, request)
+        # Check if request data is valid
+        serializer = IssuesUpdateSerializer(data=data)
+        if serializer.is_valid():
+            # Udate the issue
+            self.update_issue(issue, serializer.validated_data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, project_id, issue_id, comment_id):
+
+        # Check if the user is a project's contributor
+        # and has issue's permission.
+        issue = self.check_issue_permission(
+            request, self,
+            project_id, issue_id)
+        issue.delete()
+        return Response(
+            headers={'issue': 'delete'},
+            status=status.HTTP_204_NO_CONTENT)
+
+    def update_comment(self, issue, validated_data):
+        '''This method aims to update an issue'''
+
+        issue.title = validated_data['title']
+        issue.description = validated_data['description']
+        issue.tag = validated_data['tag']
+        issue.priority = validated_data['priority']
+        issue.status = validated_data['status']
+        issue.assignee = validated_data['assignee']
+        issue.save()
+
+    def check_comment_permission(
+            self,
+            request,
+            view,
+            project_id,
+            comment_id=None):
+        '''This method aims to ensure that the user is a project's contributor
+        and has comment's permission.
+        This method return the comment or None.
+        '''
+
+        # Get project by id
+        project = get_object_or_404(Projects, id=project_id)
+        # Check if the user is a contributor of this project
+        check_if_project_contributor(request, project)
+        # If its an update or detail method
+        if comment_id:
+            # Get project by id
+            comment = get_object_or_404(Comments, id=comment_id)
+            # If request method is not create
+            if request.method not in ('POST',):
+                # Check if the user has permissions
+                view.check_object_permissions(request, comment)
+            return comment
 
 
 def check_if_project_contributor(request, project):
