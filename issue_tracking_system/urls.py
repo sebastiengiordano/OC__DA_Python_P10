@@ -25,7 +25,8 @@ urlpatterns = [
         CommentView.as_view(),
         name='comment_create_list'),
     path(
-        'projects/<int:project_id>/issues/<int:issue_id>/comments/<int:comment_id>/',
+        'projects/<int:project_id>/issues/<int:issue_id>/'
+        'comments/<int:comment_id>/',
         CommentView.as_view(),
         name='comment_update_detail'),
 ]

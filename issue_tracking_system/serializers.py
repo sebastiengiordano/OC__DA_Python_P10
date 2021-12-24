@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Projects, Contributors, Issues
+from .models import Projects, Contributors, Issues, Comments
 
 
 class ProjectsSerializerMethods(serializers.ModelSerializer):
@@ -108,9 +108,7 @@ class ContributorsSerializer(serializers.ModelSerializer):
             'user_email',
             'project_id',
             'permission',
-            'role',
-            'date_created',
-            'date_updated'
+            'role'
             ]
 
     def get_user_id(self, instance):
@@ -129,14 +127,17 @@ class ManageContributorSerializer(serializers.Serializer):
     email = serializers.EmailField(write_only=True)
 
 
-class IssuesSerializerMethods(serializers.ModelSerializer):
-    '''Methods used for issue's serializers.'''
+class SerializerMethods(serializers.ModelSerializer):
+    '''Methods used for issue's serializers and comment's serializers.'''
 
     def get_issue_id(self, instance):
         return instance.id
 
     def get_project_id(self, instance):
         return instance.project.id
+
+    def get_comment_id(self, instance):
+        return instance.id
 
     def get_author_id(self, instance):
         return instance.author.id
@@ -151,7 +152,7 @@ class IssuesSerializerMethods(serializers.ModelSerializer):
         return instance.assignee.email
 
 
-class IssuesSerializer(IssuesSerializerMethods):
+class IssuesSerializer(SerializerMethods):
     '''Serializer of issue.'''
 
     issue_id = serializers.SerializerMethodField()
@@ -166,16 +167,13 @@ class IssuesSerializer(IssuesSerializerMethods):
             'title',
             'project_id',
             'author_id',
-            'assignee_id',
-            'date_created',
-            'date_updated'
+            'assignee_id'
             ]
 
 
 class IssuesDetailSerializer(IssuesSerializer):
     '''Serializer of issue for detail view.'''
 
-    issue_id = serializers.SerializerMethodField()
     author_email = serializers.SerializerMethodField(read_only=True)
     assignee_email = serializers.SerializerMethodField(read_only=True)
 
@@ -218,22 +216,29 @@ class IssuesUpdateSerializer(serializers.ModelSerializer):
         return []
 
 
-class CommentsSerializer(IssuesSerializerMethods):
-    '''Serializer of issue.'''
+class CommentsSerializer(SerializerMethods):
+    '''Serializer of comment.'''
 
+    comment_id = serializers.SerializerMethodField()
     issue_id = serializers.SerializerMethodField()
-    project_id = serializers.SerializerMethodField(read_only=True)
-    author_id = serializers.SerializerMethodField(read_only=True)
-    assignee_id = serializers.SerializerMethodField(read_only=True)
+    author_email = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = Issues
+        model = Comments
         fields = [
-            'issue_id',
-            'title',
-            'project_id',
+            'comment_id',
+            'description',
             'author_id',
-            'assignee_id',
-            'date_created',
-            'date_updated'
+            'author_email',
+            'issue_id',
+            ]
+
+
+class CommentsUpdateSerializer(SerializerMethods):
+    '''Serializer of comment for update purpose.'''
+
+    class Meta:
+        model = Comments
+        fields = [
+            'description'
             ]

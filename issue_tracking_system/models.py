@@ -155,7 +155,7 @@ class Comments(models.Model):
     author = models.ForeignKey(
                             'accounts.CustomUser',
                             on_delete=models.CASCADE,
-                            related_name='author_issue')
+                            related_name='author_comment')
     issue = models.ForeignKey(
                             'issue_tracking_system.Issues',
                             on_delete=models.CASCADE,
