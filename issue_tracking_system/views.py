@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.exceptions import MethodNotAllowed, PermissionDenied
+from rest_framework.exceptions import MethodNotAllowed
 
 from django.shortcuts import get_object_or_404
 
@@ -65,7 +65,7 @@ class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
         return Projects.objects.filter(pk__in=projects_id)
 
     @action(
-        detail=False, methods=['post', 'get', 'delete'],
+        detail=False, methods=['post', 'get'],
         url_path='(?P<project_id>[0-9]+)/users')
     def manage_contributor(self, request, project_id):
         '''This method aims to manage contributors.'''
@@ -90,7 +90,10 @@ class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
                 permission='Read_Only',
                 role='contributor'
                 )
-            return Response(ContributorsSerializer(contributor).data)
+            return Response(
+                ContributorsSerializer(contributor).data,
+                status=status.HTTP_200_OK,
+                headers={'contributor': 'added'})
 
         # Get project's contributors list
         elif request.method == 'GET':
@@ -99,25 +102,27 @@ class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
             serializer = ContributorsSerializer(queryset, many=True)
             return Response(serializer.data)
 
-        # Delete project's contributor
-        elif request.method == 'DELETE':
-            # Validate data
-            serializer = ManageContributorSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            # Get user by email
-            user = get_object_or_404(
-                CustomUser,
-                email=serializer.validated_data['email'])
-            # Get project by id
-            project = get_object_or_404(Projects, id=project_id)
-            # Check if the user has permissions
-            self.check_object_permissions(request, project)
-            # Removed contributor of this project
-            contributor = get_object_or_404(
-                Contributors,
-                user=user,
-                project=project).delete()
-            return Response(CustomUserSerializer(user).data)
+    @action(
+        detail=False, methods=['delete'],
+        url_path='(?P<project_id>[0-9]+)/users/(?P<user_id>[0-9]+)')
+    def delete_contributor(self, request, project_id, user_id):
+        '''This method aims to removed a project's contributor.'''
+
+        # Check if the user is a project's contributor
+        # and has project's permission.
+        project = self.check_project_permission(request, self, project_id)
+        # Get user by id
+        user = get_object_or_404(CustomUser, pk=user_id)
+        # Removed contributor of this project
+        contributor = get_object_or_404(
+            Contributors,
+            user=user,
+            project=project)
+        contributor.delete()
+        return Response(
+            CustomUserSerializer(user).data,
+            status=status.HTTP_200_OK,
+            headers={'contributor': 'removed'})
 
     def check_project_permission(self, request, view, project_id):
         '''This method aims to ensure that the user is a project's contributor

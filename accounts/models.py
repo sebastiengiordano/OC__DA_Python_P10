@@ -73,7 +73,7 @@ class CustomUser(AbstractBaseUser):
         verbose_name='last name',
         max_length=255)
     admin = models.BooleanField(default=False)
-    staff = models.BooleanField(default=False) 
+    staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     # Since Email & Password are required by default,
