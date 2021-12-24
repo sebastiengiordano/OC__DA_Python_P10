@@ -55,3 +55,14 @@ class CustomUserSerializer(serializers.ModelSerializer):
         update_session_auth_hash(self.context.get('request'), instance)
 
         return instance
+
+
+class CustomUserListSerializer(CustomUserSerializer):
+    '''List serialiser of custom user.'''
+
+    class Meta:
+        model = CustomUser
+        fields = [
+            "id",
+            "email"
+        ]

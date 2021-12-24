@@ -2,7 +2,8 @@ from rest_framework import generics, viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 
 from accounts.models import CustomUser
-from accounts.serializers import CustomUserSerializer
+from accounts.serializers import \
+    CustomUserSerializer, CustomUserListSerializer
 from accounts.permissions import IsAdminAuthenticated
 
 
@@ -24,6 +25,7 @@ class UserView(viewsets.GenericViewSet,
     '''
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
+    list_serializer_class = CustomUserListSerializer
 
     def get_permissions(self):
         """
@@ -35,3 +37,8 @@ class UserView(viewsets.GenericViewSet,
         else:
             permission_classes = (IsAdminAuthenticated,)
         return [permission() for permission in permission_classes]
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return self.list_serializer_class
+        return super().get_serializer_class()
