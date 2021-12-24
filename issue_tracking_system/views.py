@@ -3,7 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.exceptions import MethodNotAllowed
+from rest_framework.exceptions import \
+    MethodNotAllowed, PermissionDenied, ValidationError
 
 from django.shortcuts import get_object_or_404
 
@@ -76,6 +77,13 @@ class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
 
         # Add a contributor to the project
         if request.method == 'POST':
+            # Check if the user is the project's author
+            if not request.user == project.author:
+                raise PermissionDenied(
+                    detail=(
+                        f'Method {request.method} is not allowed since '
+                        'you\'re not the project\'s author.')
+                    )
             # Validate data
             serializer = ManageContributorSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
@@ -113,6 +121,14 @@ class ProjectView(MultipleSerializerMixin, viewsets.ModelViewSet):
         project = self.check_project_permission(request, self, project_id)
         # Get user by id
         user = get_object_or_404(CustomUser, pk=user_id)
+        # Check if contributor to removed is not the project author
+        if project.author == user:
+            raise ValidationError(
+                    detail=(
+                        'Since you\'re the project\'s author and that '
+                        'the user you want to removed is yourself, '
+                        'this action is not allowed.')
+                    )
         # Removed contributor of this project
         contributor = get_object_or_404(
             Contributors,
