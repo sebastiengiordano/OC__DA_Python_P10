@@ -1,0 +1,3213 @@
+{
+	"info": {
+		"_postman_id": "e1bfb154-3e40-4a1c-9bd7-09b4345e3b40",
+		"name": "Issue Tracking System",
+		"description": "Back-end of a REST API to create and follow technical report.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Token",
+			"item": [
+				{
+					"name": "Get Admin Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"// var xsrfCookie = postman.getResponseCookie(\"csrftoken\");\r",
+									"// pm.globals.set('csrf_token', xsrfCookie.value);\r",
+									"pm.globals.set('access_token', responseJson['access']);\r",
+									"pm.globals.set('refresh_token', responseJson['refresh']);\r",
+									"// console.log('csrf_token: ' + pm.globals.replaceIn('{{csrf_token}}'));\r",
+									"// console.log('access_token: ' + pm.globals.replaceIn('{{access_token}}'));\r",
+									"\r",
+									"// pm.environment.set('access_token', responseJson['access']);\r",
+									"// pm.environment.set('refresh_token', responseJson['refresh']);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "admin@email-address.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "admin-password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"login",
+								""
+							]
+						},
+						"description": "Aims to connect to API as administrator"
+					},
+					"response": []
+				},
+				{
+					"name": "Get First User Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"// var xsrfCookie = postman.getResponseCookie(\"csrftoken\");\r",
+									"// pm.globals.set('csrf_token', xsrfCookie.value);\r",
+									"pm.globals.set('access_token', responseJson['access']);\r",
+									"pm.globals.set('refresh_token', responseJson['refresh']);\r",
+									"// console.log('csrf_token: ' + pm.globals.replaceIn('{{csrf_token}}'));\r",
+									"\r",
+									"// pm.environment.set('access_token', responseJson['access']);\r",
+									"// pm.environment.set('refresh_token', responseJson['refresh']);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "first-user@email-address.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "kXkk6jgkiiZELz_1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"login",
+								""
+							]
+						},
+						"description": "Aims to connect to API as the first-user."
+					},
+					"response": []
+				},
+				{
+					"name": "Get SecondUser Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"// var xsrfCookie = postman.getResponseCookie(\"csrftoken\");\r",
+									"// pm.globals.set('csrf_token', xsrfCookie.value);\r",
+									"pm.globals.set('access_token', responseJson['access']);\r",
+									"pm.globals.set('refresh_token', responseJson['refresh']);\r",
+									"// console.log('csrf_token: ' + pm.globals.replaceIn('{{csrf_token}}'));\r",
+									"\r",
+									"// pm.environment.set('access_token', responseJson['access']);\r",
+									"// pm.environment.set('refresh_token', responseJson['refresh']);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "second-user@email-address.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "kXkk6jgkiiZELz_2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"login",
+								""
+							]
+						},
+						"description": "Aims to connect to API as the second-user."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Third User Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"// var xsrfCookie = postman.getResponseCookie(\"csrftoken\");\r",
+									"// pm.globals.set('csrf_token', xsrfCookie.value);\r",
+									"pm.globals.set('access_token', responseJson['access']);\r",
+									"pm.globals.set('refresh_token', responseJson['refresh']);\r",
+									"// console.log('csrf_token: ' + pm.globals.replaceIn('{{csrf_token}}'));\r",
+									"\r",
+									"// pm.environment.set('access_token', responseJson['access']);\r",
+									"// pm.environment.set('refresh_token', responseJson['refresh']);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "third-user@email-address.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "kXkk6jgkiiZELz_3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"login",
+								""
+							]
+						},
+						"description": "Aims to connect to API as the third-user."
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();\r",
+									"pm.globals.set('access_token', responseJson['access']);\r",
+									"// var xsrfCookie = postman.getResponseCookie(\"csrftoken\");\r",
+									"// pm.globals.set('csrf_token', xsrfCookie.value);\r",
+									"\r",
+									"// pm.environment.set('access_token', responseJson['access']);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "refresh",
+									"value": "{{refresh_token}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/token/refresh/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"token",
+								"refresh",
+								""
+							]
+						},
+						"description": "When token validity expired, this endpoint ask for a neek token for the current user's session."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint to manage some user."
+		},
+		{
+			"name": "Accounts",
+			"item": [
+				{
+					"name": "First CustomUser",
+					"item": [
+						{
+							"name": "Create First CustomUser",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-CSRFToken",
+										"value": "{{csrf_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "first-user@email-address.com",
+											"type": "text"
+										},
+										{
+											"key": "first_name",
+											"value": "First",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "Doe",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "kXkk6jgkiiZELz_1",
+											"type": "text"
+										},
+										{
+											"key": "password_check",
+											"value": "kXkk6jgkiiZELz_1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/signup/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"signup",
+										""
+									]
+								},
+								"description": "Administrator could create the first-user account."
+							},
+							"response": []
+						},
+						{
+							"name": "Get First CustomUser",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-CSRFToken",
+										"value": "{{csrf_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/user/4/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"user",
+										"4",
+										""
+									]
+								},
+								"description": "Authenticated user could get the detail view of the first user."
+							},
+							"response": []
+						},
+						{
+							"name": "Update First Users",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-CSRFToken",
+										"value": "{{csrf_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "first-user@email-address.com",
+											"type": "text"
+										},
+										{
+											"key": "first_name",
+											"value": "First",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "Doe",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "kXkk6jgkiiZELz_1",
+											"type": "text"
+										},
+										{
+											"key": "password_check",
+											"value": "kXkk6jgkiiZELz_1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/user/4/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"user",
+										"4",
+										""
+									]
+								},
+								"description": "Administrator could update the first-user account."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete First CustomUser",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-CSRFToken",
+										"value": "{{csrf_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/user/4/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"user",
+										"4",
+										""
+									]
+								},
+								"description": "Administrator could delete the first user account."
+							},
+							"response": []
+						}
+					],
+					"description": "Endpoint link to the first-user account."
+				},
+				{
+					"name": "Second CustomUser",
+					"item": [
+						{
+							"name": "Create Second CustomUser",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"// console.log('csrf_token: ' + pm.globals.replaceIn('{{csrf_token}}'));\r",
+											"// console.log('access_token: ' + pm.globals.replaceIn('{{access_token}}'));"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-CSRFToken",
+										"value": "{{csrf_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "second-user@email-address.com",
+											"type": "text"
+										},
+										{
+											"key": "first_name",
+											"value": "John",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "Doe",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "kXkk6jgkiiZELz_2",
+											"type": "text"
+										},
+										{
+											"key": "password_check",
+											"value": "kXkk6jgkiiZELz_2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/signup/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"signup",
+										""
+									]
+								},
+								"description": "Administrator could create the second-user account."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Second CustomUser",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-CSRFToken",
+										"value": "{{csrf_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/user/8/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"user",
+										"8",
+										""
+									]
+								},
+								"description": "Authenticated user could get the detail view of the second user."
+							},
+							"response": []
+						},
+						{
+							"name": "Update Second Users",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-CSRFToken",
+										"value": "{{csrf_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "second-user@email-address.com",
+											"type": "text"
+										},
+										{
+											"key": "first_name",
+											"value": "Second-",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "John-",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "kXkk6jgkiiZELz_2",
+											"type": "text"
+										},
+										{
+											"key": "password_check",
+											"value": "kXkk6jgkiiZELz_2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/user/8/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"user",
+										"8",
+										""
+									]
+								},
+								"description": "Administrator could update the second-user account."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Second CustomUser",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-CSRFToken",
+										"value": "{{csrf_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/user/8/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"user",
+										"8",
+										""
+									]
+								},
+								"description": "Administrator could delete the second user account."
+							},
+							"response": []
+						}
+					],
+					"description": "Endpoint link to the second-user account."
+				},
+				{
+					"name": "Third CustomUser",
+					"item": [
+						{
+							"name": "Create Third CustomUser",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-CSRFToken",
+										"value": "{{csrf_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "third-user@email-address.com",
+											"type": "text"
+										},
+										{
+											"key": "first_name",
+											"value": "Third",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "User",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "kXkk6jgkiiZELz_3",
+											"type": "text"
+										},
+										{
+											"key": "password_check",
+											"value": "kXkk6jgkiiZELz_3",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/signup/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"signup",
+										""
+									]
+								},
+								"description": "Administrator could create the third-user account."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Third CustomUser",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-CSRFToken",
+										"value": "{{csrf_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/user/3/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"user",
+										"3",
+										""
+									]
+								},
+								"description": "Authenticated user could get the detail view of the third user."
+							},
+							"response": []
+						},
+						{
+							"name": "Update Third CustomUser",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-CSRFToken",
+										"value": "{{csrf_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "third-user@email-address.com",
+											"type": "text"
+										},
+										{
+											"key": "first_name",
+											"value": "Third",
+											"type": "text"
+										},
+										{
+											"key": "last_name",
+											"value": "User",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "kXkk6jgkiiZELz_3",
+											"type": "text"
+										},
+										{
+											"key": "password_check",
+											"value": "kXkk6jgkiiZELz_3",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/user/3/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"user",
+										"3",
+										""
+									]
+								},
+								"description": "Administrator could update the third-user account."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Third CustomUser",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Connection",
+										"value": "keep-alive",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token}}",
+										"type": "text"
+									},
+									{
+										"key": "X-CSRFToken",
+										"value": "{{csrf_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/user/3/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"user",
+										"3",
+										""
+									]
+								},
+								"description": "Administrator could delete the third user account."
+							},
+							"response": []
+						}
+					],
+					"description": "Endpoint link to the third-user account."
+				},
+				{
+					"name": "Get Users List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/user/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"user",
+								""
+							]
+						},
+						"description": "Authenticated user could get the users list."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/user/7/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"user",
+								"7",
+								""
+							]
+						},
+						"description": "Authenticated user could get the detail view of an user."
+					},
+					"response": []
+				},
+				{
+					"name": "Create CustomUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "user_4@email-address.com",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "User_4",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "User_4_last_name",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "kXkk6jgkiiZELz_User_4",
+									"type": "text"
+								},
+								{
+									"key": "password_check",
+									"value": "kXkk6jgkiiZELz_User_4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/signup/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"signup",
+								""
+							]
+						},
+						"description": "Administrator could create a new user account.\n\nNeed to update the body of this request."
+					},
+					"response": []
+				},
+				{
+					"name": "Update CustomUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "user_3@email-address.com",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "User_3",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "User_3_last_name",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "kXkk6jgkiiZELz_User_3",
+									"type": "text"
+								},
+								{
+									"key": "password_check",
+									"value": "kXkk6jgkiiZELz_User_3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/user/7/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"user",
+								"7",
+								""
+							]
+						},
+						"description": "Administrator could update any user account.\n\nNeed to update the body of this request and update the url like below:\n\nhttp://127.0.0.1:8000/user/<user_id\\>/"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete CustomUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/user/10/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"user",
+								"10",
+								""
+							]
+						},
+						"description": "Administrator could delete any user account with its user id.\n\nUpdate the url like below:\n\n[http://127.0.0.1:8000/user/<](http://127.0.0.1:8000/user//)user_id[\\>/](http://127.0.0.1:8000/user//)"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints to create, list, detail and delete API user.\n\nCreate or delete users are only allowed for the administrator.\n\nGet user are only allowed for authenticate users."
+		},
+		{
+			"name": "Projects",
+			"item": [
+				{
+					"name": "Create Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Project - SecondUser - 2",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Project - SecondUser - 2 - description",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "Front-end",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								""
+							]
+						},
+						"description": "Authenticated user could create a new project."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Second project - title",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "First project - description",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "Back-end",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/4/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"4",
+								""
+							]
+						},
+						"description": "Project's author could update their own project."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Projects List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								""
+							]
+						},
+						"description": "Authenticated user could get the list of all projects where he's a contributor."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Project Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/4/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"4",
+								""
+							]
+						},
+						"description": "Project's contributor could see the detail of a project.\n\nUpdate the url below:\n\n[http://127.0.0.1:8000/projects/\"project_id\"/](http://127.0.0.1:8000/projects/)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Project",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/6/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"6",
+								""
+							]
+						},
+						"description": "Project's author could delete its own project by id.\n\nUpdate the url like below:\n\n[http://127.0.0.1:8000/projects/\"project_id\"/](http://127.0.0.1:8000/projects/)"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints to manage projects."
+		},
+		{
+			"name": "Contributor",
+			"item": [
+				{
+					"name": "Add contributor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "user_3@email-address.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/4/users/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"4",
+								"users",
+								""
+							]
+						},
+						"description": "Project's author could add a contributor to the project.\n\nUpdate the url like below:\n\n[http://127.0.0.1:8000/projects/\"project_id\"/users/](http://127.0.0.1:8000/projects/[)\n\nNeed also to update the body request with the user email corresponding to the user you want to add."
+					},
+					"response": []
+				},
+				{
+					"name": "Get contributor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/4/users/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"4",
+								"users",
+								""
+							]
+						},
+						"description": "Project's contributor could get the list of project's contributors.\n\n  \nUpdate the url like below:  \n[http://127.0.0.1:8000/projects/\"project_id\"/users/](http://127.0.0.1:8000/projects/\"project_id\"/users/)"
+					},
+					"response": []
+				},
+				{
+					"name": "Removed contributor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/4/users/8/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"4",
+								"users",
+								"8",
+								""
+							]
+						},
+						"description": "Project's author could removed a project's contributors with its user_id.  \nUpdate the url like below:  \nhttp://127.0.0.1:8000/projects/\"project_id\"/users/\"contributor_user_id\"/"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints to manage project's contributors."
+		},
+		{
+			"name": "Issues",
+			"item": [
+				{
+					"name": "Create Isssue",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Issue project 4 - number 3",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Issue - created by third-user@email-address.com - assignee first-user@email-address.com",
+									"type": "text"
+								},
+								{
+									"key": "tag",
+									"value": "Task",
+									"type": "text"
+								},
+								{
+									"key": "priority",
+									"value": "High",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "In_Progress",
+									"type": "text"
+								},
+								{
+									"key": "assignee",
+									"value": "first-user@email-address.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/4/issues/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"4",
+								"issues",
+								""
+							]
+						},
+						"description": "Project's contributor could create an issue related to this project.\n\nUpdate the url like below:  \n[http://127.0.0.1:8000/projects/\"project_id\"/issues/](http://127.0.0.1:8000/projects/\"project_id\"/users/)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Isssue",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "First issue - title",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "description",
+									"value": "First issue - description",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "tag",
+									"value": "Improvement",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "priority",
+									"value": "Medium",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "To_Do",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "assignee",
+									"value": "second-user@email-address.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/4/issues/11/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"4",
+								"issues",
+								"11",
+								""
+							]
+						},
+						"description": "Issue's author could update them.\n\nUpdate the url like below:  \n[http://127.0.0.1:8000/projects/\"project_id\"/issues/](http://127.0.0.1:8000/projects/\"project_id\"/issues/)[\"issue_id\"/](http://127.0.0.1:8000/projects/\"project_id\"/issues/)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Isssue List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/4/issues/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"4",
+								"issues",
+								""
+							]
+						},
+						"description": "Project's contributor could get the list of all issues related to this project.\n\nUpdate the url like below:  \n[http://127.0.0.1:8000/projects/\"project_id\"/issues/](http://127.0.0.1:8000/projects/)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Isssue Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/4/issues/13/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"4",
+								"issues",
+								"13",
+								""
+							]
+						},
+						"description": "Project's contributor could get the detail of an issue.\n\nUpdate the url like below:  \n[http://127.0.0.1:8000/projects/\"project_id\"/issues/](http://127.0.0.1:8000/projects/)[\"issue_id\"/](http://127.0.0.1:8000/projects/)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Issue",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/4/issues/11/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"4",
+								"issues",
+								"11",
+								""
+							]
+						},
+						"description": "Issue's author could delete its issues.\n\nUpdate the url like below:  \n[http://127.0.0.1:8000/projects/\"project_id\"/issues/](http://127.0.0.1:8000/projects/)[\"issue_id\"/](http://127.0.0.1:8000/projects/)"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints to manage project's issues."
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "Create Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "Comment - created by third-user@email-address.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/4/issues/13/comments/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"4",
+								"issues",
+								"13",
+								"comments",
+								""
+							]
+						},
+						"description": "Project's contributor could create a comment related to an issue's project.\n\nUpdate the url like below:  \nhttp://127.0.0.1:8000/projects/\"project_id\"/issues/\"issue_id\"/comments/"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "description",
+									"value": "Comment - updated by second-user@email-address.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/4/issues/12/comments/1/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"4",
+								"issues",
+								"12",
+								"comments",
+								"1",
+								""
+							]
+						},
+						"description": "Comment's author could update them.\n\nUpdate the url like below:  \n[http://127.0.0.1:8000/projects/\"project_id\"/issues/\"issue_id\"/comments/\"comment_id\"/](http://127.0.0.1:8000/projects/\"project_id\"/issues/\"issue_id\"/comments/\"comment_id\"/)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Comment List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/4/issues/13/comments/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"4",
+								"issues",
+								"13",
+								"comments",
+								""
+							]
+						},
+						"description": "Project's contributor could get the list of all comments related to an issue's project.\n\nUpdate the url like below:  \n[http://127.0.0.1:8000/projects/\"project_id\"/issues/\"issue_id\"/comments/](http://127.0.0.1:8000/projects/\"project_id\"/issues/\"issue_id\"/comments/\"comment_id\"/)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Comment Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/4/issues/13/comments/3/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"4",
+								"issues",
+								"13",
+								"comments",
+								"3",
+								""
+							]
+						},
+						"description": "Project's contributor could get the detail of a comment.\n\nUpdate the url like below:  \nhttp://127.0.0.1:8000/projects/\"project_id\"/issues/\"issue_id\"/comments/\"comment_id\"/"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Connection",
+								"value": "keep-alive",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "X-CSRFToken",
+								"value": "{{csrf_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/projects/4/issues/13/comments/3/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"projects",
+								"4",
+								"issues",
+								"13",
+								"comments",
+								"3",
+								""
+							]
+						},
+						"description": "Comment's author could delete them.\n\nUpdate the url like below:  \n[http://127.0.0.1:8000/projects/\"project_id\"/issues/\"issue_id\"/comments/\"comment_id\"/](http://127.0.0.1:8000/projects/\"project_id\"/issues/\"issue_id\"/comments/\"comment_id\"/)"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints to manage issue's comments."
+		}
+	]
+}
